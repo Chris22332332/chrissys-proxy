@@ -1,6 +1,6 @@
 // ChrissysProxy v15 service worker. Scramjet manages its own IndexedDB schema;
 // ChrissysProxy deliberately does not inspect, delete, or close Scramjet databases.
-importScripts('/scram/scramjet.all.js?build=chrissysproxy-20261031-25');
+importScripts('/scram/scramjet.all.js?build=chrissysproxy-20261031-26');
 
 const { ScramjetServiceWorker } = $scramjetLoadWorker();
 const scramjet = new ScramjetServiceWorker();

@@ -12,13 +12,15 @@ test('ChrissysProxy exposes all seven accessible workspace tabs and panels', () 
   }
 });
 
-test('all eight game cards use local original artwork and legitimate catalogue URLs', () => {
-  const images = ['arcade', 'racing', 'puzzle', 'adventure', 'sports', 'platformer', 'boss-battle', 'strategy'];
+test('seven game cards use local original artwork and legitimate catalogue URLs', () => {
+  const images = ['arcade', 'puzzle', 'adventure', 'sports', 'platformer', 'boss-battle', 'strategy'];
   for (const image of images) {
     assert.ok(existsSync(new URL(`../public/assets/games/${image}.webp`, import.meta.url)));
     assert.ok(html.includes(`/assets/games/${image}.webp`));
   }
-  for (const url of ['https://poki.com/', 'https://www.crazygames.com/', 'https://itch.io/games/html5', 'https://armorgames.com/', 'https://www.coolmathgames.com/', 'https://www.y8.com/', 'https://www.newgrounds.com/games', 'https://gamejolt.com/games']) {
+  assert.equal((html.match(/data-game-card/g) || []).length, 7);
+  assert.ok(!html.includes('crazygames.com'));
+  for (const url of ['https://poki.com/', 'https://itch.io/games/html5', 'https://armorgames.com/', 'https://www.coolmathgames.com/', 'https://www.y8.com/', 'https://www.newgrounds.com/games', 'https://gamejolt.com/games']) {
     assert.ok(html.includes(url));
   }
 });

@@ -6,7 +6,7 @@ ChrissysProxy is a private, purple-themed browser workspace built with Node.js 2
 
 - A custom purple brand icon, SVG/ICO/PNG favicons, Apple touch icon, and installable web manifest.
 - Seven workspace sections: Home, Games, Apps, Library, Notes, Downloads, and Tools.
-- Eight locally stored original game-card illustrations and a live game-catalogue filter.
+- Seven third-party game-catalogue shortcuts and a live filter, using local original artwork.
 - Original SVG interface icons for the app launcher and workspace controls.
 - A command palette (`Ctrl+K`) with keyboard navigation and actions for tabs, search, workspace sections, settings, and diagnostics.
 - Local Notes with search, autosave, delete, and JSON backup export.
@@ -15,7 +15,7 @@ ChrissysProxy is a private, purple-themed browser workspace built with Node.js 2
 - Protected hosted access and authenticated same-origin Wisp WebSocket upgrades.
 - v16 fixes Wisp per-host stream counting, keeps limits at 200 total / 30 per host, and requests IPv4-first DNS. v17 waits for Scramjet configuration before routing the first proxied request. v18 replaces the Apps shortcuts with popular social, music, and video services. v21 makes Auto prefer Libcurl after browser testing, tracks Scramjet in-page navigation for Back/Forward, and applies Settings transport changes directly. v22 avoids a Scramjet config race in the service-worker fetch path. v23 waits for the current service worker before starting proxy navigation. v24 defaults searches to Brave because Render timed out connecting to DuckDuckGo.
 
-The Games section links to third-party catalogues including Poki, CrazyGames, itch.io HTML5, Armor Games, Coolmath Games, Y8, Newgrounds, and Game Jolt. These are ordinary websites, not built-in games. Availability depends on the site and the network; ChrissysProxy does not bypass school/work network restrictions or site access controls.
+The Games section links to third-party catalogues including Poki, itch.io HTML5, Armor Games, Coolmath Games, Y8, Newgrounds, and Game Jolt. These are ordinary websites, not built-in games. Availability depends on the site and the network; ChrissysProxy does not bypass school/work network restrictions or site access controls.
 
 ## Quick start (Windows / Node 22)
 
