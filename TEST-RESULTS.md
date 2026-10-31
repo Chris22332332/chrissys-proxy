@@ -1,4 +1,4 @@
-# ChrissysProxy v25 test report
+# ChrissysProxy v26 test report
 
 ## Verified locally
 
@@ -17,12 +17,13 @@
 - Example Domain and Google homepage rendered over Libcurl; Example Domain rendered over Epoxy.
 - Brave Search returned results over Epoxy.
 - DuckDuckGo timed out from Render (`ETIMEDOUT` to `52.250.42.157:443`) with both transports. Google search triggered Google's unusual-traffic CAPTCHA. This points to destination/network restrictions on Render's outbound path, not a local TLS certificate error.
-- v24 defaults searches to Brave based on the live test. Commit `17bd046` was previously deployed; current v25 build is commit `7322ecb`.
+- v24 defaults searches to Brave based on the live test. v25 added the low-lag interface setting.
 - Game checks: CrazyGames pages render, but the Space Waves game area stayed blank under Libcurl. Bloxd.io reached its game loading spinner and remained there for about one minute under Epoxy. Changing transports did not resolve either case. Actual gameplay remains unverified.
+- v26 removes CrazyGames from the Games shortcuts because its game area did not render; the remaining seven catalogue shortcuts are retained.
 
 ## Current deployment
 
-Render `/healthz` returns `ok: true`, build `chrissysproxy-20261031-25`, and Node major 22. The low-lag interface option is present in Appearance settings.
+Render `/healthz` returns `ok: true`, build `chrissysproxy-20261031-26`, and Node major 22. The Games section shows seven shortcuts and no CrazyGames card.
 
 ## Environment note
 

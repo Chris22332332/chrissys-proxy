@@ -1,8 +1,8 @@
-CHRISSYSPROXY v25 TEST SUMMARY
+CHRISSYSPROXY v26 TEST SUMMARY
 
 npm ci completed on Node 24.13.0; zero npm audit vulnerabilities reported. Node 24 warns because the project targets Node 22.
 Low-lag mode was tested in a browser on PORT=8081; it removed interface blur and shadows. Theme selection was verified and restored.
 npm test: 51 tests passed, 0 failed; source/configuration checks passed. git diff --check passed.
 
 Render v24 checks: Example Domain and Google homepage rendered over Libcurl; Example Domain rendered over Epoxy; Brave Search returned results over Epoxy. DuckDuckGo timed out from Render (ETIMEDOUT to 52.250.42.157:443) with both transports. Google search triggered an unusual-traffic CAPTCHA. CrazyGames Space Waves details loaded, but its game area stayed blank under Libcurl. Bloxd.io stayed on its game-loading spinner for about one minute under Epoxy. Switching transports did not resolve game startup.
-Render v25 is live at commit 7322ecb. /healthz reports build chrissysproxy-20261031-25 on Node 22; low-lag mode is present in Appearance settings.
+Render v26 is live at commit 218d853. /healthz reports build chrissysproxy-20261031-26 on Node 22. CrazyGames was removed from the Games shortcuts; seven other catalogues remain.
