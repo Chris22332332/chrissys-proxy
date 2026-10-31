@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import dns from 'node:dns';
 import { fileURLToPath } from 'node:url';
 import { access } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -12,7 +13,8 @@ import { createLoginLimiter, createSessionToken, isSameOriginRequest, parseCooki
 import { handleWispUpgrade } from './src/wisp-upgrade.js';
 import { resolveRuntimeConfig, formatRuntimeConfigErrors } from './src/runtime-config.js';
 
-const BUILD_ID = 'chrissysproxy-20261030-15';
+const BUILD_ID = 'chrissysproxy-20261031-23';
+dns.setDefaultResultOrder('ipv4first');
 const app = express();
 const server = createServer(app);
 const publicPath = fileURLToPath(new URL('./public', import.meta.url));
@@ -38,9 +40,10 @@ Object.assign(wisp.options, {
   allow_private_ips: false,
   allow_loopback_ips: false,
   port_whitelist: [80, 443],
-  stream_limit_total: 80,
-  stream_limit_per_host: 12,
+  stream_limit_total: 200,
+  stream_limit_per_host: 30,
   wisp_version: 2,
+  dns_result_order: 'ipv4first',
   parse_real_ip: false,
   hostname_blacklist: [
     /^localhost$/i,
@@ -163,7 +166,7 @@ app.get('/__portal/diagnostics', async (_req, res) => {
   localAssets.forEach((asset, index) => { assets[asset.replaceAll('/', '_').replaceAll('.', '_')] = localAssetResults[index]; });
   const required = [scramjetAll, scramjetWasm, scramjetSync, baremuxWorker, baremuxIndex, libcurlEntry, epoxyEntry, ...localAssetResults];
   const ok = required.every(Boolean);
-  res.status(ok ? 200 : 503).json({ ok, service: 'chrissysproxy', build: BUILD_ID, node: process.version, authEnabled, transportGenerations: { scramjet: '1.1.0', bareMux: '2.1.9', libcurl: '1.5.2', epoxy: '2.1.28', wisp: '0.4.1' }, wispPolicy: { tcp: true, udp: false, destinationPorts: [80, 443], privateNetworks: false, loopback: false }, assets });
+  res.status(ok ? 200 : 503).json({ ok, service: 'chrissysproxy', build: BUILD_ID, node: process.version, authEnabled, transportGenerations: { scramjet: '1.1.0', bareMux: '2.1.9', libcurl: '1.5.2', epoxy: '2.1.28', wisp: '0.5.1' }, wispPolicy: { tcp: true, udp: false, destinationPorts: [80, 443], privateNetworks: false, loopback: false }, assets });
 });
 
 app.use('/scram/', express.static(scramjetPath, { fallthrough: false, index: false, etag: false, maxAge: 0 }));
@@ -189,7 +192,7 @@ server.on('error', (error) => {
 });
 server.listen(port, listenHost, () => {
   console.log(`CHRISSYSPROXY ${BUILD_ID} LISTENING on ${listenHost}:${port}`);
-  console.log(`Authentication: ${authEnabled ? 'enabled' : 'disabled (loopback-only local development)'}`);
+  console.log(`Authentication: ${authEnabled ? 'enabled' : 'disabled (set PORTAL_REQUIRE_PASSWORD=true to enable)'}`);
   console.log(`Proxy transports: libcurl=${Boolean(libcurl.libcurlPath)} epoxy=${Boolean(epoxy.epoxyPath)}`);
   console.log('CHRISSYSPROXY_SERVER_STARTUP_COMPLETE');
 });

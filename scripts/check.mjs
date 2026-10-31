@@ -64,7 +64,7 @@ if (pkg.dependencies?.['@mercuryworkshop/scramjet'] !== '1.1.0') throw new Error
 if (pkg.dependencies?.['@mercuryworkshop/bare-mux'] !== '2.1.9') throw new Error('BareMux must remain on the v2.1.9 API used by this project');
 if (pkg.dependencies?.['@mercuryworkshop/libcurl-transport'] !== '1.5.2') throw new Error('Libcurl transport must remain on v1.x with the BareMux integration');
 if (pkg.dependencies?.['@mercuryworkshop/epoxy-transport'] !== '2.1.28') throw new Error('Epoxy transport must remain on v2.x with the BareMux integration');
-if (pkg.dependencies?.['@mercuryworkshop/wisp-js'] !== '0.4.1') throw new Error('Wisp server package must be pinned to the tested Wisp API generation');
+if (pkg.dependencies?.['@mercuryworkshop/wisp-js'] !== '0.5.1') throw new Error('Wisp server package must be pinned to the tested Wisp API generation');
 if (!pkg.dependencies?.express || !pkg.dependencies?.['@mercuryworkshop/wisp-js']) throw new Error('Express and Wisp server dependencies are required');
 const preflight = readFileSync('scripts/preflight.mjs', 'utf8');
 if (preflight.includes("load('@mercuryworkshop/bare-mux')")) throw new Error('Do not import the browser-only BareMux client module in Node preflight.');
@@ -98,11 +98,11 @@ if (!appJs.includes('settings.maxTabs') || !appJs.includes('compact-tabs') || !a
 if (!appJs.includes('exportSettings') || !appJs.includes('importSettings') || !appJs.includes('resetSettings') || !appJs.includes('validateSettingsBackup')) throw new Error('Advanced settings import/export/reset actions are incomplete.');
 if (!appJs.includes('validateSettingsBackup(parsed)') || !appJs.includes('file.size > 1024 * 1024')) throw new Error('Settings import must validate format and file size.');
 if (!html.includes('id="tab-context-menu"') || !html.includes('data-tab-action="others"') || !html.includes('data-tab-action="pin"')) throw new Error('Custom tab context menu is missing');
-if (html.includes('class="quick"') || /YouTube|Reddit|Wikipedia/.test(html)) throw new Error('Preset auto-recommendation links must not be present');
+if (html.includes('class="quick"')) throw new Error('Preset auto-recommendation links must not be present');
 if (!html.includes('id="bq"') || !html.includes('role="search"')) throw new Error('Address/search bar is missing');
 if (!html.includes('<title>ChrissysProxy — Purple Browser Workspace</title>')) throw new Error('ChrissysProxy document title or branding is missing.');
-if (!html.includes('type="module" src="/app.js?build=chrissysproxy-20261030-15"')) throw new Error('HTML does not load the v13 application script');
-if (!appJs.includes("const BUILD_ID = 'chrissysproxy-20261030-15'")) throw new Error('App script build identifier is wrong');
+if (!html.includes('type="module" src="/app.js?build=chrissysproxy-20261031-23"')) throw new Error('HTML does not load the v23 application script');
+if (!appJs.includes("const BUILD_ID = 'chrissysproxy-20261031-23'")) throw new Error('App script build identifier is wrong');
 if (!appJs.includes('scramjet.createFrame()') || !appJs.includes('tab.scramFrame.go(url)')) throw new Error('Scramjet managed frame API is missing');
 if (!appJs.includes('connection.setTransport(path, options)')) throw new Error('BareMux transport must be configured before the service worker');
 if (!appJs.includes('tab.navigationRequestId') || !appJs.includes('tabs.includes(tab)')) throw new Error('Navigation race/closed-tab protection is missing');
@@ -119,7 +119,7 @@ if (worker.includes('indexedDB.deleteDatabase') || worker.includes('indexedDB.da
 if (!worker.includes("requestUrl.pathname.startsWith(SCRAMJET_PREFIX)")) throw new Error('Service worker must only intercept proxied-page paths');
 if (!worker.includes('scramjet.loadConfig()') || !worker.includes('scramjet.fetch(event)')) throw new Error('Scramjet request path is incomplete');
 if (!appJs.includes("from './settings-core.js'") || !html.includes('type="module"')) throw new Error('Browser settings module is not loaded as an ES module.');
-if (!worker.includes('chrissysproxy-20261030-15')) throw new Error('Service worker build identifier is wrong');
+if (!worker.includes('chrissysproxy-20261031-23')) throw new Error('Service worker build identifier is wrong');
 console.log('PASS conservative service-worker routing and Scramjet-managed storage');
 
 const securityImport = server.match(/import\s*\{([^}]+)\}\s*from\s*['"]\.\/src\/security\.js['"]/s);
@@ -141,29 +141,28 @@ if (!server.includes('allow_private_ips: false') || !server.includes('allow_loop
 if (!server.includes('port_whitelist: [80, 443]')) throw new Error('Wisp destination port allowlist is missing');
 if (!server.includes('wisp_version: 2') || !server.includes('parse_real_ip: false')) throw new Error('Wisp v2 or forwarded-client-IP trust policy is missing');
 if (!server.includes('const localAssets = [') || !server.includes('/__portal/diagnostics') || !server.includes("app.get('/healthz'")) throw new Error('Health and diagnostics endpoints are missing');
-if (!server.includes("const BUILD_ID = 'chrissysproxy-20261030-15'")) throw new Error('Server build identifier is wrong');
+if (!server.includes("const BUILD_ID = 'chrissysproxy-20261031-23'")) throw new Error('Server build identifier is wrong');
 console.log('PASS protected Wisp endpoint, destination policy, and diagnostics');
 
 const login = readFileSync('public/login.html', 'utf8');
 if (!login.includes('/api/login') || !login.includes('autocomplete="current-password"')) throw new Error('Private sign-in page is incomplete');
 if (login.includes('YOUR_PASSWORD')) throw new Error('Do not ship a hard-coded password');
-if (!render.includes('PORTAL_ACCESS_PASSWORD') || !render.includes('PORTAL_SESSION_SECRET') || !render.includes('generateValue: true') || !render.includes('healthCheckPath: /healthz')) throw new Error('Render Blueprint must define both secrets and a health check');
+if (render.includes('PORTAL_ACCESS_PASSWORD') || render.includes('PORTAL_SESSION_SECRET') || !render.includes('healthCheckPath: /healthz')) throw new Error('Render Blueprint must leave optional sign-in disabled by default and define a health check');
 if (!render.includes('name: chrissysproxy')) throw new Error('Render Blueprint must use the ChrissysProxy service name.');
-if (!render.includes('key: PORTAL_ACCESS_PASSWORD\n        generateValue: true')) throw new Error('Render Blueprint must generate the access password automatically.');
 if (!render.includes('buildCommand: npm install && npm test && npm run preflight') || !render.includes('startCommand: npm start')) throw new Error('Render must install dependencies, run tests, and verify real package exports/assets before deploying');
 if (existsSync('.node-version') && readFileSync('.node-version', 'utf8').trim() !== '22') throw new Error('Optional .node-version file, when present, must contain 22');
 console.log('PASS Node version selected by package.json engines; hidden Node dotfile is optional');
 if (existsSync('.env.example')) console.log('INFO legacy .env.example found; ENVIRONMENT.example.txt is the visible template used by this build');
-console.log('PASS private sign-in and new-service Render configuration');
+console.log('PASS opt-in sign-in and new-service Render configuration');
 
 if (!server.includes('listenHost } = runtimeConfig')) throw new Error('Server must use the centrally validated runtime host binding.');
 if (!runtimeConfigSource.includes("hosted ? '0.0.0.0' : '127.0.0.1'")) throw new Error('Hosted service must bind to all interfaces and local development to loopback.');
 for (const file of ['server.js', 'public/app.js', 'public/sw.js', 'public/index.html']) {
   const content = readFileSync(file, 'utf8');
   if (content.includes('portal-20261030-10')) throw new Error(`Old v10 build identifier remains in ${file}`);
-  if (!content.includes('chrissysproxy-20261030-15')) throw new Error(`ChrissysProxy v15 build identifier missing from ${file}`);
+  if (!content.includes('chrissysproxy-20261031-23')) throw new Error(`ChrissysProxy v23 build identifier missing from ${file}`);
 }
-console.log('PASS matching ChrissysProxy v15 build identifier and safe local binding across server, app, HTML, and service worker');
+console.log('PASS matching ChrissysProxy v23 build identifier and safe local binding across server, app, HTML, and service worker');
 
 const gameAssetFiles = ['public/favicon.svg', 'public/manifest.webmanifest', 'public/assets/icons/favicon.ico', 'public/assets/icons/favicon-32.png', 'public/assets/icons/icon-192.png', 'public/assets/icons/icon-512.png', 'public/assets/icons/icon-maskable-512.png', 'public/assets/games/arcade.webp', 'public/assets/games/racing.webp', 'public/assets/games/puzzle.webp', 'public/assets/games/adventure.webp', 'public/assets/games/sports.webp', 'public/assets/games/platformer.webp', 'public/assets/games/boss-battle.webp', 'public/assets/games/strategy.webp'];
 for (const file of gameAssetFiles) if (!existsSync(file)) throw new Error(`Missing original game artwork: ${file}`);

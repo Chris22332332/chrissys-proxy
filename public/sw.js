@@ -1,10 +1,24 @@
 // ChrissysProxy v15 service worker. Scramjet manages its own IndexedDB schema;
 // ChrissysProxy deliberately does not inspect, delete, or close Scramjet databases.
-importScripts('/scram/scramjet.all.js?build=chrissysproxy-20261030-15');
+importScripts('/scram/scramjet.all.js?build=chrissysproxy-20261031-23');
 
 const { ScramjetServiceWorker } = $scramjetLoadWorker();
 const scramjet = new ScramjetServiceWorker();
 const SCRAMJET_PREFIX = '/~/sj/';
+
+async function loadScramjetConfig() {
+  let lastError;
+  for (let attempt = 0; attempt < 20; attempt++) {
+    try {
+      await scramjet.loadConfig();
+      if (typeof scramjet.config?.prefix === 'string' && scramjet.config.prefix) return;
+    } catch (error) {
+      lastError = error;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+  throw lastError || new Error('Scramjet configuration is not ready. Reload ChrissysProxy and try again.');
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(self.skipWaiting());
@@ -21,9 +35,11 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith((async () => {
     try {
-      await scramjet.loadConfig();
-      if (scramjet.route(event)) return await scramjet.fetch(event);
-      return await fetch(event.request);
+      await loadScramjetConfig();
+      // This handler already filters to the Scramjet prefix above. Calling
+      // route() here re-reads config.prefix and can race a worker update even
+      // after config readiness was confirmed; pass the known proxy request on.
+      return await scramjet.fetch(event);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       const details = { name: error?.name || 'Error', message, url: event.request.url };

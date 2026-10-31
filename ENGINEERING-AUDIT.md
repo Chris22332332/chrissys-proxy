@@ -1,4 +1,4 @@
-# ChrissysProxy v15 engineering audit
+# ChrissysProxy engineering audit (v15 baseline, v16 repair)
 
 ## Starting point
 
@@ -42,3 +42,39 @@ ChrissysProxy uses one private authenticated Wisp endpoint with Libcurl/Epoxy as
 - A genuine browser automation test was unavailable due to the sandbox browser navigation policy.
 
 Render must complete `npm install && npm test && npm run preflight`, pass `prestart`, start Express, establish Wisp, and load a permitted HTTPS test page before this can be called end-to-end verified.
+
+
+## v16 proxy repair
+
+- Browser testing reproduced Libcurl error 35. Wisp 0.4.1 per-host filtering iterated the stream object as an array and crashed when proxy streams were opened.
+- Updated Wisp to 0.5.1, whose filter iterates the object values; retained Wisp v2 configuration, IPv4-first DNS, destination port allowlist 80/443, and stream caps 200 total / 30 per host.
+- v21 changes Auto to prefer Libcurl after direct browser testing showed that Epoxy failed to load YouTube and TikTok, while Libcurl rendered both. Epoxy remains an explicit Settings choice and Auto fallback.
+- Verified locally in a real browser: Example Domain, Google, DuckDuckGo and search results, YouTube, CrazyGames, and a CrazyGames game route render with Libcurl. TikTok's page renders with Libcurl; its API may still return site-side 403 responses. Explicit Epoxy fails on YouTube with Scramjet's error screen. Auto selects Libcurl and renders the tested pages.
+- `npm test` passes (50 tests and checks).
+- Render was not tested; deployment-specific outbound DNS/network behavior remains unverified.
+
+## v17 first-search repair
+
+- Reproduced a first-search prefix error on a fresh app origin; the same search worked on retry.
+- The service worker now waits up to one second for Scramjet's persisted config before routing a request, and returns a clear readiness error if it never appears.
+- Bumped the build identifier to v17 so browsers install the updated worker.
+
+## v21 transport and navigation repair
+
+- Auto now prefers Libcurl based on live browser results: YouTube and TikTok rendered with Libcurl but failed or remained blank with Epoxy.
+- Scramjet `urlchange` events now enter the workspace history so Back and Forward reflect links and routes opened inside proxied pages, including CrazyGames.
+- The Settings change handler now passes its selected transport directly, so a diagnostic query preference cannot override a user's switch.
+- Startup reuses an already controlling same-origin ChrissysProxy service worker while its updated version installs, avoiding a connection error during build updates.
+- `npm test` passes (50 tests); `npm run preflight` passes. Render was not tested.
+
+## v22 Scramjet fetch repair
+
+- Reproduced the browser's `Cannot read properties of undefined (reading 'prefix')` response after reload.
+- The service worker already filters requests to the Scramjet prefix before handling them. It now calls Scramjet's fetch handler directly, avoiding a second `route()` config lookup that could race worker initialization.
+- Browser verification on the prior build had already confirmed the server was reachable; the failure was inside the service-worker request path, not a refused Express connection.
+
+## v23 worker update repair
+
+- Reproduced the prefix error after refresh: startup accepted the old worker and returned before requesting or waiting for the current worker build.
+- Startup now requests a worker update and only starts proxied navigation once the controller matches the current build. It watches the install state and reports update failures instead of silently using the stale worker.
+- `npm test` passes (50 tests); `npm run preflight` passes.

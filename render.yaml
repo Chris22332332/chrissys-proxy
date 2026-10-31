@@ -9,7 +9,3 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORTAL_ACCESS_PASSWORD
-        generateValue: true
-      - key: PORTAL_SESSION_SECRET
-        generateValue: true

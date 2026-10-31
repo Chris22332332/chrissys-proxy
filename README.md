@@ -1,8 +1,8 @@
-# ChrissysProxy v15
+# ChrissysProxy v21
 
 ChrissysProxy is a private, purple-themed browser workspace built with Node.js 22, Express, Scramjet 1.x, BareMux 2.x, Libcurl/Epoxy transports, and Wisp JS.
 
-## What's new in v15
+## Included features
 
 - A custom purple brand icon, SVG/ICO/PNG favicons, Apple touch icon, and installable web manifest.
 - Seven workspace sections: Home, Games, Apps, Library, Notes, Downloads, and Tools.
@@ -13,6 +13,7 @@ ChrissysProxy is a private, purple-themed browser workspace built with Node.js 2
 - A Downloads & Exports panel that records ChrissysProxy-generated backups. External website downloads remain subject to browser and site behavior.
 - Existing browser tabs, pinning, drag reordering, duplicate/reopen, session restore, history, bookmarks, settings import/export, diagnostics, and purple themes.
 - Protected hosted access and authenticated same-origin Wisp WebSocket upgrades.
+- v16 fixes Wisp per-host stream counting, keeps limits at 200 total / 30 per host, and requests IPv4-first DNS. v17 waits for Scramjet configuration before routing the first proxied request. v18 replaces the Apps shortcuts with popular social, music, and video services. v21 makes Auto prefer Libcurl after browser testing, tracks Scramjet in-page navigation for Back/Forward, and applies Settings transport changes directly. v22 avoids a Scramjet config race in the service-worker fetch path. v23 waits for the current service worker before starting proxy navigation.
 
 The Games section links to third-party catalogues including Poki, CrazyGames, itch.io HTML5, Armor Games, Coolmath Games, Y8, Newgrounds, and Game Jolt. These are ordinary websites, not built-in games. Availability depends on the site and the network; ChrissysProxy does not bypass school/work network restrictions or site access controls.
 
@@ -30,7 +31,7 @@ Local development binds to `127.0.0.1`. Do not expose the local development serv
 
 ## Render
 
-See [RENDER-DEPLOYMENT.md](RENDER-DEPLOYMENT.md). Hosted deployments require `PORTAL_ACCESS_PASSWORD` (20+ characters) and `PORTAL_SESSION_SECRET` (a different secret, 32+ characters). `npm start` validates both variables and runs the installed-package/asset preflight before starting Express.
+See [RENDER-DEPLOYMENT.md](RENDER-DEPLOYMENT.md). Hosted deployments run without sign-in by default. To require sign-in, set `PORTAL_REQUIRE_PASSWORD=true`, `PORTAL_ACCESS_PASSWORD` (20+ characters), and `PORTAL_SESSION_SECRET` (a different secret, 32+ characters). `npm start` validates these when sign-in is enabled and runs the installed-package/asset preflight before starting Express.
 
 ## Diagnostics
 

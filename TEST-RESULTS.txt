@@ -1,14 +1,11 @@
-CHRISSYSPROXY v15 TEST SUMMARY
+CHRISSYSPROXY v23 TEST SUMMARY
 
-48/48 Node unit tests passed.
-74 source/configuration checks passed.
-JavaScript syntax checks passed.
-HTML selector audit passed: 61 JavaScript ID lookups exist; 67 unique HTML IDs; no duplicates.
-Hidden-dotfile upload simulation passed.
-PWA icon/manifest and eight local game-art assets passed presence checks.
-Notes and command palette core tests passed.
-Wisp upgrade/security tests passed.
+npm install completed; zero npm audit vulnerabilities reported.
+npm start with PORT=8080 passed startup checks.
+Real browser with Libcurl: Example Domain, Google, DuckDuckGo search results, YouTube, and CrazyGames rendered. A CrazyGames game route loaded, and Back/Forward worked between the catalogue and game route.
+TikTok rendered its page with Libcurl, though some site API requests returned 403. Auto selected Libcurl successfully. Explicit Epoxy reproduced the YouTube Scramjet error screen.
+Settings switched transports; the app now waits for the current worker build during reload. The redundant service-worker route check was removed to prevent a Scramjet config race.
+npm test: 50 tests passed, 0 failed; source/configuration checks passed. npm run preflight passed.
 
-NOT VERIFIED: This workspace could not reach registry.npmjs.org (EAI_AGAIN), so a fresh dependency install and real installed-package preflight could not be completed. Real server startup, live Wisp handshake, and external website through Scramjet also remain unverified. Confirm these on Render before calling the live proxy operational.
-
-The package uses npm install (not npm ci) because no package-lock.json was generated here. Do not treat local unit tests as proof of successful deployment or proxy traffic.
+Node 24.13.0 was available locally while the project specifies Node 22 (>=22.9 <23); local install/start/test succeeded on Node 24.
+Render was not tested; Render-specific network/DNS behavior remains unverified.

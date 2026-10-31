@@ -6,7 +6,7 @@ import { filterCommands } from './command-core.js';
 'use strict';
 
 const $ = (id) => document.getElementById(id);
-const BUILD_ID = 'chrissysproxy-20261030-15';
+const BUILD_ID = 'chrissysproxy-20261031-23';
 const DEFAULT_MAX_TABS = 16;
 const ALLOWED_MAX_TABS = [8, 12, 16, 24];
 const SCRIPT_TIMEOUT_MS = 20000;
@@ -439,6 +439,27 @@ function setTabTitle(tab, title) {
   tab.el.setAttribute('aria-label', tab.title);
   tab.el.title = `${tab.pinned ? 'Pinned · ' : ''}${tab.title}`;
 }
+function recordScramjetUrlChange(tab, managedFrame, value) {
+  if (!tabs.includes(tab) || tab.scramFrame !== managedFrame || typeof value !== 'string') return;
+  let url;
+  try { url = new URL(value).href; } catch { return; }
+  if (!['http:', 'https:'].includes(new URL(url).protocol) || url === tab.currentUrl) return;
+  if (tab.historyIndex < tab.history.length - 1) tab.history = tab.history.slice(0, tab.historyIndex + 1);
+  tab.history.push(url);
+  if (tab.history.length > 80) tab.history.shift();
+  tab.historyIndex = tab.history.length - 1;
+  tab.currentUrl = url;
+  try { tab.title = managedFrame.frame.contentDocument?.title || hostOf(url); } catch { tab.title = hostOf(url); }
+  setTabTitle(tab, tab.title);
+  if (active === tab) {
+    $('bq').value = url;
+    $('status-left').textContent = hostOf(url);
+    updateBookmarkButton();
+  }
+  saveHistory(url, tab.title);
+  updateNavigationButtons();
+  saveSession();
+}
 function attachFrameEvents(tab, frame) {
   frame.addEventListener('load', () => {
     if (tab.frame !== frame || !tabs.includes(tab)) return;
@@ -696,10 +717,10 @@ async function checkAsset(path) {
     throw new Error(`Could not reach required proxy file ${path}: ${error.message}`);
   } finally { clearTimeout(timer); }
 }
-async function chooseTransport() {
+async function chooseTransport(preferenceOverride) {
   const wisp = `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/wisp/`;
   const queryPreference = new URLSearchParams(location.search).get('transport');
-  const requestedPreference = queryPreference || settings.transport;
+  const requestedPreference = preferenceOverride || queryPreference || settings.transport;
   const preferred = ['auto', 'libcurl', 'epoxy'].includes(requestedPreference) ? requestedPreference : 'auto';
   const candidates = preferred === 'libcurl' ? ['libcurl'] : preferred === 'epoxy' ? ['epoxy'] : ['libcurl', 'epoxy'];
   let lastError;
@@ -728,12 +749,22 @@ function waitForServiceWorker(registration) {
     const finish = (error) => {
       if (done) return; done = true; clearTimeout(timer);
       navigator.serviceWorker.removeEventListener('controllerchange', onChange);
+      registration.removeEventListener('updatefound', onUpdateFound);
       error ? reject(error) : resolve();
     };
-    const onChange = () => { if (matches(navigator.serviceWorker.controller)) finish(); };
-    const timer = setTimeout(() => finish(new Error('The updated service worker did not take control. Close old ChrissysProxy tabs and reload.')), 15000);
+    const watchInstallingWorker = () => {
+      const worker = registration.installing;
+      if (worker) worker.addEventListener('statechange', onChange);
+    };
+    const onUpdateFound = () => watchInstallingWorker();
+    const onChange = () => {
+      if (matches(navigator.serviceWorker.controller)) finish();
+    };
+    const timer = setTimeout(() => finish(new Error('The updated proxy worker did not take control. Reload the page and try again.')), 20000);
     navigator.serviceWorker.addEventListener('controllerchange', onChange);
-    registration.update().catch(() => {});
+    registration.addEventListener('updatefound', onUpdateFound);
+    watchInstallingWorker();
+    registration.update().catch((error) => finish(new Error(`Could not update the proxy service worker: ${error.message}`)));
     onChange();
   });
 }
@@ -821,6 +852,7 @@ async function go(value, tab = active, options = {}) {
       oldFrame.replaceWith(frame);
       tab.frame = frame;
       tab.scramFrame = managedFrame;
+      managedFrame.addEventListener('urlchange', (event) => recordScramjetUrlChange(tab, managedFrame, event.url));
       applyFramePermissions(tab);
       attachFrameEvents(tab, frame);
     }
@@ -1090,7 +1122,7 @@ function bindEvents() {
       return;
     }
     try {
-      await chooseTransport();
+      await chooseTransport(this.value);
       say(`Transport changed to ${currentTransport}. Reload the active page to use the new transport.`);
     } catch (error) {
       settings.transport = previous;

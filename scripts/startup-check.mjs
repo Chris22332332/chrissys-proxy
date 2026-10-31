@@ -8,6 +8,6 @@ if (config.errors.length) {
   console.log('CHRISSYSPROXY STARTUP CONFIGURATION PASSED');
   console.log(`Runtime: Node ${process.versions.node}`);
   console.log(`Hosting mode: ${config.hosted ? 'hosted' : 'local'}`);
-  console.log(`Authentication: ${config.authEnabled ? 'enabled' : 'disabled (loopback-only development)'}`);
+  console.log(`Authentication: ${config.authEnabled ? 'enabled' : 'disabled (set PORTAL_REQUIRE_PASSWORD=true to enable)'}`);
   console.log(`Port: ${config.port}`);
 }

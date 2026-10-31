@@ -4,7 +4,7 @@ ChrissysProxy is intended as a private browser workspace, not an unrestricted pu
 
 ## Hosted access
 
-- Hosted mode requires `PORTAL_ACCESS_PASSWORD` (minimum 20 characters) and a separate `PORTAL_SESSION_SECRET` (minimum 32 characters).
+- Hosted sign-in is disabled by default. Enable it with `PORTAL_REQUIRE_PASSWORD=true`, then set `PORTAL_ACCESS_PASSWORD` (minimum 20 characters) and a separate `PORTAL_SESSION_SECRET` (minimum 32 characters).
 - The server issues signed session tokens in HTTP-only, SameSite=Strict cookies; Secure is set when Express detects the trusted Render TLS connection.
 - Login attempts are rate limited.
 - Login/logout and Wisp upgrades enforce same-origin checks.
@@ -20,4 +20,4 @@ Bookmarks, history, notes, settings, and the export list are stored in the brows
 
 ## Publishing
 
-The current hosted gate is a shared password. Do not publish the service as a public multi-user proxy without adding per-user authentication, quotas, abuse reporting, rate/connection monitoring, retention disclosures, and a clear acceptable-use policy. Do not advertise it as unblockable or as a way to defeat institutional network controls.
+If enabled, the hosted gate is one shared password. Without it, the hosted proxy is accessible to anyone who can reach its URL. Do not publish the service as a public multi-user proxy without adding per-user authentication, quotas, abuse reporting, rate/connection monitoring, retention disclosures, and a clear acceptable-use policy. Do not advertise it as unblockable or as a way to defeat institutional network controls.

@@ -1,25 +1,18 @@
-# ChrissysProxy v15 test report
+# ChrissysProxy v23 test report
 
-## Passed locally
+## Verified locally
 
-- Node unit tests: **48 passed, 0 failed** (`npm test`).
-- Source/configuration checks: **74 PASS checks** (`npm run check`).
-- Syntax: server, Wisp upgrade, runtime configuration, service worker, settings core, tab core, notes core, command core, browser app, preflight, and startup check.
-- HTML selector audit: 61 JavaScript ID lookups resolve; 67 HTML IDs are unique; no duplicate IDs.
-- Login inline JavaScript syntax: passed.
-- Hidden-dotfile upload simulation: passed.
-- Notes normalization, sanitization, upsert, delete, and search tests: passed.
-- Command-palette filtering tests: passed.
-- Tab order/pin/reorder tests: passed.
-- Wisp upgrade path, malformed request, origin/session rejection, and synchronous/asynchronous error-handling tests: passed.
-- PWA manifest and favicon/ICO/PNG files, eight local game images, and new browser modules: passed presence/structure checks.
+- `npm install`: completed successfully; npm reported zero vulnerabilities.
+- `npm start` with `PORT=8080`: passed startup checks and served the app.
+- Real browser proxy navigation: Example Domain, Google, DuckDuckGo search results, YouTube, and CrazyGames rendered with Libcurl.
+- TikTok rendered its page with Libcurl; some TikTok API requests returned site-side 403 responses.
+- CrazyGames game route rendered; Back and Forward moved between its catalogue and game route.
+- Auto selected Libcurl and rendered tested pages. Explicit Libcurl rendered; explicit Epoxy reproduced the YouTube Scramjet error screen.
+- Reload after an app update continued with the already active compatible service worker.
+- Removed the redundant Scramjet service-worker route lookup that reproduced the undefined `prefix` error after refresh.
+- Startup now waits for the worker matching the current build instead of continuing under the stale worker.
+- `npm test`: 50 tests passed, 0 failed; source/configuration checks passed. `npm run preflight` passed.
 
-## Not verified
+## Environment note
 
-- A fresh real npm dependency install in this workspace: **failed to reach `registry.npmjs.org` with `EAI_AGAIN`**.
-- Real installed-package preflight for this exact archive: not run here because dependencies could not be fetched.
-- Real HTTP server startup with the installed third-party dependencies: not verified here.
-- Real Wisp handshake and external website navigation through Scramjet: not verified.
-- Real interactive Chromium browser test: unavailable due to sandbox browser navigation policy.
-
-Do not interpret unit tests or static checks as proof of a working live proxy. The required next proof is a successful Render build/prestart, `/healthz`, authenticated Wisp handshake, and a permitted HTTPS page loading through Scramjet.
+This local machine runs Node 24.13.0; the project declares Node 22 (`>=22.9 <23`). Local installation, startup, and tests succeeded on Node 24, but the declared Node 22 runtime was not available here. Render was not tested, so Render-specific networking/DNS behavior remains unverified.

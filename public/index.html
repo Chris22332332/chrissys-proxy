@@ -318,14 +318,14 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
       </section>
 
       <section class="hub-pane" data-hub-pane="apps" role="tabpanel">
-        <div class="hub-heading"><p class="eyebrow">YOUR WEB TOOLKIT</p><h2>App <span>Launchpad</span></h2><p>Useful web destinations for learning, creating, building, and getting organized.</p></div>
+        <div class="hub-heading"><p class="eyebrow">YOUR FAVORITES</p><h2>App <span>Launchpad</span></h2><p>Open your favorite social, music, and video apps.</p></div>
         <div class="app-grid">
-          <button type="button" class="app-card" data-launch-url="https://www.khanacademy.org/"><span class="app-icon app-green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 5.5v16M8 8h8M8 12h6"/></svg></span><span><strong>Khan Academy</strong><small>Learning and practice</small></span><b>↗</b></button>
-          <button type="button" class="app-card" data-launch-url="https://scratch.mit.edu/"><span class="app-icon app-orange"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 4 6 6-9.8 9.8-6 1.2 1.2-6zM12 6l6 6M4.5 16.5l3 3"/></svg></span><span><strong>Scratch</strong><small>Create games and animations</small></span><b>↗</b></button>
-          <button type="button" class="app-card" data-launch-url="https://code.org/"><span class="app-icon app-blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5-5 7 5 7M16 5l5 7-5 7M14 4l-4 16"/></svg></span><span><strong>Code.org</strong><small>Learn computer science</small></span><b>↗</b></button>
-          <button type="button" class="app-card" data-launch-url="https://github.com/"><span class="app-icon app-dark"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 6H14a4 4 0 0 1 4 4v5.8M6 8.2v7.6a2.2 2.2 0 0 0 2.2 2.2H15.8"/></svg></span><span><strong>GitHub</strong><small>Code and project hosting</small></span><b>↗</b></button>
-          <button type="button" class="app-card" data-launch-url="https://docs.google.com/"><span class="app-icon app-yellow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v5h5M8 12h8M8 16h8"/></svg></span><span><strong>Google Docs</strong><small>Documents and writing</small></span><b>↗</b></button>
-          <button type="button" class="app-card" data-launch-url="https://www.photopea.com/"><span class="app-icon app-pink"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1.2a2 2 0 0 0 1.5-3.3 1.8 1.8 0 0 1 1.4-3h1.4A3.5 3.5 0 0 0 21 11.2 8.9 8.9 0 0 0 12 3Z"/><circle cx="7.5" cy="10" r="1"/><circle cx="11" cy="6.8" r="1"/><circle cx="16" cy="8.8" r="1"/></svg></span><span><strong>Photopea</strong><small>Browser-based image editing</small></span><b>↗</b></button>
+          <button type="button" class="app-card" data-launch-url="https://www.youtube.com/"><span class="app-icon app-orange">▶</span><span><strong>YouTube</strong><small>Videos and creators</small></span><b>↗</b></button>
+          <button type="button" class="app-card" data-launch-url="https://www.tiktok.com/"><span class="app-icon app-dark">♪</span><span><strong>TikTok</strong><small>Short videos</small></span><b>↗</b></button>
+          <button type="button" class="app-card" data-launch-url="https://www.instagram.com/"><span class="app-icon app-pink">IG</span><span><strong>Instagram</strong><small>Photos, reels, and messages</small></span><b>↗</b></button>
+          <button type="button" class="app-card" data-launch-url="https://discord.com/app"><span class="app-icon app-blue">D</span><span><strong>Discord</strong><small>Chats and communities</small></span><b>↗</b></button>
+          <button type="button" class="app-card" data-launch-url="https://open.spotify.com/"><span class="app-icon app-green">♫</span><span><strong>Spotify</strong><small>Music and podcasts</small></span><b>↗</b></button>
+          <button type="button" class="app-card" data-launch-url="https://www.reddit.com/"><span class="app-icon app-yellow">r/</span><span><strong>Reddit</strong><small>Communities and conversations</small></span><b>↗</b></button>
         </div>
         <p class="hub-disclaimer">These are normal external services, not built-in apps. Some sites restrict embedding or require their own sign-in.</p>
       </section>
@@ -430,7 +430,7 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
         </section>
         <section class="settings-section" data-settings-section="connection"><h3>Connection</h3><p class="section-description">Choose a supported transport and inspect the components used by this deployment.</p>
           <div class="setting-row"><div class="setting-copy"><strong>Transport mode</strong><small>Auto tries the available transport. Alternate modes are for connection compatibility, not for overriding a site's or network's access rules.</small></div><select class="setting-select setting-control" id="transport-select"><option value="auto">Automatic</option><option value="libcurl">Libcurl</option><option value="epoxy">Epoxy</option></select></div>
-          <div class="endpoint-card"><div class="endpoint-line"><span>PROXY ROUTE</span><code>/~/sj/</code></div><div class="endpoint-line"><span>WEBSOCKET ENDPOINT</span><code id="wisp-endpoint">wss://…/wisp/</code></div><div class="endpoint-line"><span>ACTIVE BUILD</span><code id="build-label">chrissysproxy-20261030-15</code></div></div>
+          <div class="endpoint-card"><div class="endpoint-line"><span>PROXY ROUTE</span><code>/~/sj/</code></div><div class="endpoint-line"><span>WEBSOCKET ENDPOINT</span><code id="wisp-endpoint">wss://…/wisp/</code></div><div class="endpoint-line"><span>ACTIVE BUILD</span><code id="build-label">chrissysproxy-20261031-23</code></div></div>
           <div class="permission-note">ChrissysProxy does not delete Scramjet databases automatically. If the browser reports a missing IndexedDB store, close every ChrissysProxy tab and clear only this site's stored data using browser site settings.</div>
         </section>
         <section class="settings-section" data-settings-section="advanced"><h3>Advanced</h3><p class="section-description">Back up your preferences or restore the defaults for this device.</p>
@@ -444,7 +444,7 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
           <div class="permission-note">A successful WebSocket handshake proves the connection opened; it does not alone prove that an external website will load. Test a permitted HTTPS page after diagnostics pass.</div>
         </section>
         <section class="settings-section" data-settings-section="about"><h3>About ChrissysProxy</h3><p class="section-description">ChrissysProxy is a private browser workspace built around a separate proxy connection.</p>
-          <div class="endpoint-card"><div class="endpoint-line"><span>APPLICATION</span><code>ChrissysProxy</code></div><div class="endpoint-line"><span>BUILD</span><code>chrissysproxy-20261030-15</code></div><div class="endpoint-line"><span>RUNTIME</span><code>Node.js 22</code></div><div class="endpoint-line"><span>BROWSER ENGINE</span><code>Scramjet 1.x</code></div><div class="endpoint-line"><span>TRANSPORT MANAGER</span><code>BareMux 2.x</code></div><div class="endpoint-line"><span>TRANSPORTS</span><code>Libcurl / Epoxy</code></div><div class="endpoint-line"><span>WEBSOCKET</span><code>Wisp JS</code></div></div>
+          <div class="endpoint-card"><div class="endpoint-line"><span>APPLICATION</span><code>ChrissysProxy</code></div><div class="endpoint-line"><span>BUILD</span><code>chrissysproxy-20261031-23</code></div><div class="endpoint-line"><span>RUNTIME</span><code>Node.js 22</code></div><div class="endpoint-line"><span>BROWSER ENGINE</span><code>Scramjet 1.x</code></div><div class="endpoint-line"><span>TRANSPORT MANAGER</span><code>BareMux 2.x</code></div><div class="endpoint-line"><span>TRANSPORTS</span><code>Libcurl / Epoxy</code></div><div class="endpoint-line"><span>WEBSOCKET</span><code>Wisp JS</code></div></div>
           <p class="section-description">ChrissysProxy cannot guarantee availability for every website. Sites may block proxy traffic or require their own authentication, permissions, or supported browser features.</p>
         </section>
       </div>
@@ -454,6 +454,6 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
   </aside>
 </div>
 
-<script type="module" src="/app.js?build=chrissysproxy-20261030-15"></script>
+<script type="module" src="/app.js?build=chrissysproxy-20261031-23"></script>
 </body>
 </html>

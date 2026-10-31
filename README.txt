@@ -1,4 +1,4 @@
-CHRISSYSPROXY v15
+CHRISSYSPROXY v16
 
 Purple private browser workspace built with Node.js 22, Express, Scramjet 1.x, BareMux 2.x, Libcurl/Epoxy, and Wisp JS.
 
@@ -19,7 +19,7 @@ Build: npm install && npm test && npm run preflight
 Start: npm start
 Health: /healthz
 Node: >=22.9 <23
-Required hosted variables: NODE_ENV=production, PORTAL_ACCESS_PASSWORD (20+ characters), PORTAL_SESSION_SECRET (different, 32+ characters).
+Hosted sign-in is off by default. To require it, set PORTAL_REQUIRE_PASSWORD=true, PORTAL_ACCESS_PASSWORD (20+ characters), and PORTAL_SESSION_SECRET (different, 32+ characters).
 
 See README.md, SETUP.md, RENDER-DEPLOYMENT.md, SECURITY.md, ENGINEERING-AUDIT.md and TEST-RESULTS.md.
 

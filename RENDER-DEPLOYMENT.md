@@ -16,15 +16,15 @@ Upload the contents of this project to a GitHub repository with `package.json` a
 | Health Check Path | `/healthz` |
 | Node | 22.x, constrained by `package.json` to `>=22.9 <23` |
 
-`render.yaml` declares a Free Web Service and generated values for the required secrets when deployed as a Render Blueprint. If creating a normal Web Service using the dashboard form, add the environment variables below manually; the form does not automatically import `render.yaml` environment values.
+`render.yaml` declares a Free Web Service. Hosted sign-in is disabled by default. If creating a normal Web Service using the dashboard form, set `NODE_ENV=production`; Render supplies `PORT` automatically.
 
-## Required environment variables
+## Optional password sign-in
 
 Render → Service → Environment:
 
 | Key | Value |
 |---|---|
-| `NODE_ENV` | `production` |
+| `PORTAL_REQUIRE_PASSWORD` | `true` |
 | `PORTAL_ACCESS_PASSWORD` | A random private password, at least 20 characters |
 | `PORTAL_SESSION_SECRET` | A different random secret, at least 32 characters |
 
@@ -35,13 +35,13 @@ node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"
 node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
 ```
 
-Run those commands separately. Save the first value as the sign-in password. Keep both values private and never commit them to GitHub. Do not manually set `PORT`; Render supplies it.
+Only add these variables when you want to require a password. Run those commands separately. Save the first value as the sign-in password. Keep both values private and never commit them to GitHub. Do not manually set `PORT`; Render supplies it.
 
 ## Deployment sequence
 
 1. Commit the complete project contents to the `main` branch.
 2. Confirm `package.json` is at repository root.
-3. Add the three environment variables above.
+3. If you want password sign-in, add `PORTAL_REQUIRE_PASSWORD=true` and the two secrets above.
 4. Deploy the latest commit.
 5. The build runs `npm install`, the Node test suite, and the package/asset preflight.
 6. The `prestart` lifecycle checks hosted secrets and rechecks installed package exports and browser assets before the server starts.
@@ -62,22 +62,21 @@ The actual port is assigned by Render; the exact order of build and startup line
 
 ## Verify after deployment
 
-1. Open `https://<your-service>.onrender.com/healthz` and check for `ok: true`, `authEnabled: true`, and Node major version 22.
-2. Open the service and sign in with `PORTAL_ACCESS_PASSWORD`.
-3. Open Settings → Diagnostics.
-4. Check server health, asset diagnostics, browser support, and the authenticated Wisp WebSocket probe.
-5. Test a permitted HTTPS destination such as `https://example.com` through the address bar.
-6. Test the Games, Notes, Downloads, and command palette sections.
+1. Open `https://<your-service>.onrender.com/healthz` and check for `ok: true` and Node major version 22. `authEnabled` should be false unless you enabled password sign-in.
+2. If enabled, sign in with `PORTAL_ACCESS_PASSWORD`.
+3. Open Settings → Diagnostics. Check server health, asset diagnostics, browser support, and the Wisp WebSocket probe.
+4. Test a permitted HTTPS destination such as `https://example.com` through the address bar.
+5. Test the Games, Notes, Downloads, and command palette sections.
 
 The `/__portal/diagnostics` endpoint requires a signed-in session. A successful health check proves only that the server is alive, not that every website works through the proxy.
 
 ## Startup configuration errors
 
-If you see `CHRISSYSPROXY_STARTUP_CONFIGURATION_ERROR`, the output names the missing or invalid environment variable. Add or fix it in Render → Environment, save, and redeploy. `.env` is optional for local development and is not required on Render; hosted values are read from `process.env`.
+If you see `CHRISSYSPROXY_STARTUP_CONFIGURATION_ERROR`, the output names the missing or invalid environment variable. If password sign-in is enabled, add or fix its variables in Render → Environment, save, and redeploy. `.env` is optional for local development and is not required on Render; hosted values are read from `process.env`.
 
 ## Limitations and public release
 
 - Render Free services may spin down after inactivity, causing a cold start.
 - Third-party sites may block embedding/proxy traffic, require authentication, or need browser features this project does not implement.
 - ChrissysProxy does not bypass network filters, school/work access rules, or website restrictions.
-- The current access control is one shared password, not multi-user identity. For a broad public release, consider individual accounts, per-user quotas, abuse controls, a privacy policy, acceptable-use terms, and a support contact.
+- When enabled, access control is one shared password, not multi-user identity. With sign-in disabled, anyone with the URL can use the proxy. For a broad public release, consider individual accounts, per-user quotas, abuse controls, a privacy policy, acceptable-use terms, and a support contact.

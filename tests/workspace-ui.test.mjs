@@ -26,6 +26,29 @@ test('all eight game cards use local original artwork and legitimate catalogue U
 test('game and app launchers are connected to current-tab navigation', () => {
   assert.match(app, /querySelectorAll\('\[data-launch-url\]'\)/);
   assert.match(app, /go\(button\.dataset\.launchUrl, tab\)/);
+  for (const [name, url] of [['YouTube', 'https://www.youtube.com/'], ['TikTok', 'https://www.tiktok.com/'], ['Instagram', 'https://www.instagram.com/'], ['Discord', 'https://discord.com/app'], ['Spotify', 'https://open.spotify.com/'], ['Reddit', 'https://www.reddit.com/']]) {
+    assert.ok(html.includes(`data-launch-url="${url}"`), `${name} launcher is missing`);
+    assert.ok(html.includes(`<strong>${name}</strong>`), `${name} label is missing`);
+  }
+  for (const removed of ['khanacademy.org', 'scratch.mit.edu', 'code.org', 'github.com', 'docs.google.com', 'photopea.com']) assert.ok(!html.includes(removed), `${removed} should not remain in the Apps section`);
+});
+
+test('Auto prefers the tested libcurl transport and browser history tracks Scramjet URL changes', () => {
+  assert.match(app, /preferred === 'epoxy' \? \['epoxy'\] : \['libcurl', 'epoxy'\]/);
+  assert.match(app, /async function chooseTransport\(preferenceOverride\)/);
+  assert.match(app, /await chooseTransport\(this\.value\)/);
+  assert.match(app, /registration\.update\(\)\.catch/);
+  assert.match(app, /matches\(navigator\.serviceWorker\.controller\)/);
+  assert.doesNotMatch(app, /isProxyWorker\(/);
+  assert.match(app, /managedFrame\.addEventListener\('urlchange'/);
+  assert.match(app, /function recordScramjetUrlChange\(/);
+});
+
+test('Scramjet service worker sends already-filtered proxy requests directly to the fetch handler', () => {
+  const worker = readFileSync(new URL('../public/sw.js', import.meta.url), 'utf8');
+  assert.match(worker, /requestUrl\.pathname\.startsWith\(SCRAMJET_PREFIX\)/);
+  assert.match(worker, /return await scramjet\.fetch\(event\)/);
+  assert.doesNotMatch(worker, /scramjet\.route\(event\)/);
 });
 
 test('notes autosave and downloads export tracking are connected', () => {
