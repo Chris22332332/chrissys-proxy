@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: chrissysproxy
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm test && npm run preflight
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORTAL_ACCESS_PASSWORD
+        generateValue: true
+      - key: PORTAL_SESSION_SECRET
+        generateValue: true

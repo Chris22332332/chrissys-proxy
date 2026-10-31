@@ -1,0 +1,30 @@
+CHRISSYSPROXY v15 — GITHUB AND RENDER
+
+1. Extract the ZIP.
+2. Upload the FILES INSIDE the extracted folder to the ROOT of a new GitHub repository.
+3. Ensure package.json is at repository root. Do not upload the ZIP itself or create an extra nested folder.
+4. Commit to main.
+5. Create a Render Web Service connected to that repository.
+
+RENDER:
+Runtime: Node
+Root Directory: empty
+Build Command: npm install && npm test && npm run preflight
+Start Command: npm start
+Health Check: /healthz
+Node: 22.x
+
+ENVIRONMENT:
+NODE_ENV=production
+PORTAL_ACCESS_PASSWORD=<random private password, minimum 20 characters>
+PORTAL_SESSION_SECRET=<different random secret, minimum 32 characters>
+
+Use Render Generate for the secret values. Do not upload secrets to GitHub. Do not manually set PORT.
+
+Verify logs include:
+CHRISSYSPROXY STARTUP CONFIGURATION PASSED
+CHRISSYSPROXY DEPLOYMENT PREFLIGHT PASSED
+CHRISSYSPROXY chrissysproxy-20261030-15 LISTENING on 0.0.0.0:<Render port>
+CHRISSYSPROXY_SERVER_STARTUP_COMPLETE
+
+Then verify /healthz, sign in, run Settings > Diagnostics, establish the Wisp WebSocket, and test a permitted HTTPS page.

@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en" data-accent="aurora">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="application-name" content="ChrissysProxy">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#100b20">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/icons/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<title>ChrissysProxy — Purple Browser Workspace</title>
+<meta name="description" content="ChrissysProxy is a private purple browser workspace with tabs, games, apps, notes, bookmarks, and connection diagnostics.">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0d0919;--bg-2:#120d24;--panel:#17112b;--panel-2:#1e1738;--panel-3:#261d45;
+  --line:rgba(190,164,255,.15);--line-strong:rgba(190,164,255,.27);
+  --text:#f5efff;--muted:#a99cbe;--soft:#756889;
+  --accent:#b68aff;--accent-2:#7c5cff;--accent-3:#e5a7ff;--good:#70e2bb;--warn:#ffd38a;--bad:#ff8caa;
+  --shadow:0 24px 80px rgba(0,0,0,.38);--radius:18px;
+  --font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+html[data-accent="nebula"]{--accent:#a98cff;--accent-2:#6548df;--accent-3:#d5b6ff;--panel:#15112b;--panel-2:#1c1740}
+html[data-accent="plum"]{--accent:#d38aff;--accent-2:#984ee0;--accent-3:#f0b0e8;--panel:#211026;--panel-2:#2b1737}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:var(--font);color:var(--text);background:radial-gradient(ellipse at 16% -10%,rgba(124,92,255,.20),transparent 36%),radial-gradient(ellipse at 92% 4%,rgba(215,116,255,.13),transparent 28%),var(--bg);display:flex;flex-direction:column;overflow:hidden;min-width:320px}
+button,input,select{font:inherit}button{color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button{border:0;cursor:pointer}
+.icon{width:18px;height:18px;display:block;flex:none}
+.appbar{height:58px;padding:0 18px;display:flex;align-items:center;gap:16px;background:rgba(11,7,22,.78);border-bottom:1px solid var(--line);backdrop-filter:blur(22px);flex:none;z-index:5}
+.brand{display:flex;align-items:center;gap:11px;min-width:210px}
+.brand-mark{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(140deg,#d39bff,#7555f5 65%,#4b31b8);box-shadow:0 0 28px rgba(160,112,255,.32),inset 0 1px 0 rgba(255,255,255,.35)}
+.brand-mark svg{width:22px;height:22px}
+.brand-copy{display:flex;flex-direction:column;line-height:1.05;gap:4px}
+.brand-copy strong{font-size:15px;letter-spacing:.2px;font-weight:780}
+.brand-copy small{font-size:9px;letter-spacing:1.65px;color:var(--soft);font-weight:750}
+.top-center{display:flex;align-items:center;justify-content:center;flex:1;min-width:0}
+.session-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.025);font-size:10px;font-weight:750;letter-spacing:1px;color:var(--muted);white-space:nowrap}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good);animation:pulse 2.2s ease-in-out infinite}
+.session-pill.connecting .pulse{background:var(--warn);box-shadow:0 0 12px var(--warn)}
+.session-pill.error .pulse{background:var(--bad);box-shadow:0 0 12px var(--bad)}
+.app-actions{display:flex;align-items:center;gap:7px}
+.icon-btn{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:transparent;color:#c7b8e2;transition:background .2s,color .2s,transform .2s,border-color .2s;border:1px solid transparent}
+.icon-btn:hover{background:rgba(183,139,255,.12);color:white;border-color:var(--line);transform:translateY(-1px)}
+.icon-btn.active{background:rgba(182,138,255,.16);color:var(--accent-3)}
+#tabs-shell{height:46px;display:flex;align-items:stretch;gap:8px;padding:7px 12px 0;background:rgba(13,9,25,.86);border-bottom:1px solid var(--line);flex:none;z-index:4}
+#tabs{display:flex;align-items:stretch;gap:6px;min-width:0;overflow-x:auto;scrollbar-width:thin;scrollbar-color:rgba(181,139,255,.3) transparent;flex:1}
+.tab{height:38px;min-width:128px;max-width:230px;display:flex;align-items:center;gap:8px;padding:0 8px 0 12px;background:rgba(255,255,255,.035);border:1px solid transparent;border-bottom:0;border-radius:11px 11px 0 0;color:#a99cbe;position:relative;cursor:pointer;transition:background .22s,border-color .22s,color .22s;flex:none;animation:tab-in .26s cubic-bezier(.2,.8,.2,1)}
+.tab:hover{background:rgba(182,138,255,.09);color:#eee5ff}
+.tab.on{background:linear-gradient(180deg,rgba(53,37,86,.96),rgba(31,22,52,.98));border-color:var(--line-strong);color:#fff}
+.tab.on:after{content:"";height:2px;position:absolute;bottom:-1px;left:12px;right:12px;background:linear-gradient(90deg,var(--accent-2),var(--accent-3));border-radius:4px;box-shadow:0 0 12px var(--accent-2)}
+.tab-symbol{width:18px;height:18px;border-radius:6px;display:grid;place-items:center;color:var(--accent-3);background:rgba(182,138,255,.12);font-size:10px;flex:none}
+.tab-title{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;text-align:left}
+.tab-close{width:23px;height:23px;border-radius:7px;background:transparent;color:#9385a8;font-size:16px;line-height:1;display:grid;place-items:center;flex:none}
+.tab-close:hover{background:rgba(255,255,255,.12);color:#fff}.tab.pinned{min-width:48px;max-width:62px;padding:0 8px;justify-content:center}.tab.pinned .tab-title,.tab.pinned .tab-close{display:none}.tab.drag-over{outline:2px dashed var(--accent);outline-offset:-3px}.tab[draggable="true"]{user-select:none}
+#plus{width:32px;height:32px;margin:1px 0 0;border-radius:10px;background:transparent;color:var(--muted);font-size:20px;display:grid;place-items:center;flex:none;transition:all .2s}
+#plus:hover{background:rgba(182,138,255,.14);color:#fff;transform:rotate(90deg)}
+.tab-count{display:flex;align-items:center;color:var(--soft);font-size:10px;letter-spacing:.7px;padding:0 7px;white-space:nowrap}
+#bar{min-height:64px;display:flex;align-items:center;gap:9px;padding:10px 16px;background:linear-gradient(180deg,rgba(31,22,52,.98),rgba(25,17,43,.98));border-bottom:1px solid var(--line);flex:none;z-index:3}
+.nav-group{display:flex;align-items:center;gap:3px;flex:none}
+.nav{width:34px;height:34px;border-radius:11px;background:transparent;color:#c7b8e2;display:grid;place-items:center;transition:all .2s}
+.nav:hover:not(:disabled){background:rgba(182,138,255,.13);color:white;transform:translateY(-1px)}
+.nav:disabled{opacity:.32;cursor:default}
+.address-wrap{height:43px;display:flex;align-items:center;gap:9px;min-width:120px;flex:1;padding:0 8px 0 13px;border:1px solid rgba(181,139,255,.19);border-radius:14px;background:rgba(9,6,19,.62);box-shadow:inset 0 1px 5px rgba(0,0,0,.22);transition:border-color .2s,box-shadow .2s,background .2s}
+.address-wrap:focus-within{border-color:rgba(195,151,255,.72);box-shadow:0 0 0 3px rgba(158,111,255,.12),0 0 26px rgba(132,91,255,.11);background:rgba(12,8,25,.92)}
+.address-lock{color:var(--good);width:17px;height:17px;flex:none}
+#bq{height:100%;min-width:0;flex:1;color:#f4edff;background:transparent;border:0;outline:0;font-size:13px;letter-spacing:.1px}
+#bq::placeholder{color:#7f7195}
+#clear-address{width:27px;height:27px;border-radius:8px;background:transparent;color:var(--soft);font-size:17px;display:grid;place-items:center}
+#clear-address:hover{background:rgba(255,255,255,.08);color:white}
+.go{height:31px;padding:0 15px;border-radius:10px;color:#1b102a;font-size:11px;font-weight:850;letter-spacing:.3px;background:linear-gradient(105deg,#d7a9ff,#a17aff 58%,#8c7cff);box-shadow:0 5px 18px rgba(138,91,255,.24);transition:transform .18s,filter .18s,box-shadow .18s}
+.go:hover{transform:translateY(-1px);filter:brightness(1.09);box-shadow:0 7px 22px rgba(138,91,255,.34)}
+.go:active{transform:translateY(0) scale(.98)}
+#bookmark-page[aria-pressed="true"]{color:#ffd27b;background:rgba(255,210,123,.12)}
+#views{position:relative;flex:1;min-height:0;background:#0d0919}
+.view{position:absolute;inset:0;display:none;min-height:0}
+.view.on{display:block;animation:view-in .2s ease-out}
+.view iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;display:none}
+.view.nav-on iframe{display:block}
+.view.nav-on .home{display:none}
+.home{height:100%;overflow:auto;padding:clamp(24px,4vw,54px) 22px 30px;background:radial-gradient(ellipse at 50% 20%,rgba(120,78,210,.18),transparent 46%),radial-gradient(ellipse at 10% 100%,rgba(110,70,180,.12),transparent 42%);display:flex;flex-direction:column;align-items:center;position:relative;isolation:isolate}
+.home:before,.home:after{content:"";position:absolute;z-index:-1;width:280px;height:280px;border-radius:50%;filter:blur(85px);opacity:.14;pointer-events:none;animation:float 12s ease-in-out infinite alternate}
+.home:before{background:#8957ff;top:10%;left:8%}.home:after{background:#dc7bff;bottom:0;right:8%;animation-delay:-5s}
+.hero{width:min(760px,100%);display:flex;flex-direction:column;align-items:center;text-align:center;padding:12px 0 28px}
+.hero-emblem{width:68px;height:68px;border-radius:24px;display:grid;place-items:center;margin-bottom:20px;background:linear-gradient(145deg,rgba(218,174,255,.27),rgba(111,76,220,.22));border:1px solid rgba(221,190,255,.25);box-shadow:0 10px 46px rgba(132,84,245,.2),inset 0 1px rgba(255,255,255,.12);position:relative}
+.hero-emblem:after{content:"";position:absolute;inset:-7px;border:1px solid rgba(183,139,255,.17);border-radius:29px;animation:ring 4s ease-in-out infinite}
+.hero-emblem svg{width:36px;height:36px;filter:drop-shadow(0 0 10px rgba(201,161,255,.5))}
+.eyebrow{font-size:9px;letter-spacing:2.7px;font-weight:850;color:#bda6e2;margin:0 0 12px}
+.hero h1{font-size:clamp(34px,5.8vw,58px);line-height:1.02;letter-spacing:-2.8px;font-weight:850;margin:0;color:#fff}
+.hero h1 span{background:linear-gradient(100deg,#d8b4ff 5%,#a88aff 52%,#efb0ff 100%);background-clip:text;-webkit-background-clip:text;color:transparent}
+.hero-copy{font-size:13px;color:#a99cbe;line-height:1.65;margin:14px 0 22px;max-width:480px}
+.hf{width:min(640px,100%);height:58px;padding:6px 7px 6px 18px;display:flex;align-items:center;gap:10px;border-radius:17px;background:rgba(27,18,47,.88);border:1px solid rgba(193,157,255,.28);box-shadow:0 14px 50px rgba(0,0,0,.25),0 0 30px rgba(130,84,230,.08);transition:all .22s}
+.hf:focus-within{border-color:rgba(208,171,255,.78);box-shadow:0 0 0 4px rgba(157,110,255,.11),0 18px 54px rgba(0,0,0,.3)}
+.hf .search-glyph{color:#aa95d0;flex:none}
+.hf input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:white;font-size:14px}
+.hf input::placeholder{color:#7f7195}
+.hf .go{height:42px;padding:0 20px;border-radius:12px;font-size:12px}
+.hero-note{font-size:10px;color:#786b8d;margin-top:12px;letter-spacing:.1px}
+.home-content{width:min(900px,100%);display:grid;grid-template-columns:1.05fr .95fr;gap:14px;margin-top:10px}
+.home-panel{min-height:168px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,rgba(34,24,57,.85),rgba(22,15,38,.78));padding:16px 17px;box-shadow:0 12px 34px rgba(0,0,0,.12);backdrop-filter:blur(12px)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}
+.panel-title{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:850;letter-spacing:1.3px;color:#d7c7ee}
+.panel-title svg{width:15px;height:15px;color:var(--accent)}
+.text-action{background:transparent;color:#a995ce;font-size:10px;font-weight:750;padding:5px 7px;border-radius:7px}
+.text-action:hover{color:white;background:rgba(182,138,255,.1)}
+.bookmark-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bookmark-card{min-width:0;display:flex;align-items:center;gap:9px;padding:10px 9px;border:1px solid rgba(190,164,255,.1);border-radius:11px;background:rgba(255,255,255,.025);text-align:left;transition:all .18s;position:relative}
+.bookmark-card:hover{transform:translateY(-2px);background:rgba(182,138,255,.09);border-color:rgba(190,164,255,.28)}
+.bookmark-open{display:flex;align-items:center;gap:8px;min-width:0;flex:1;background:transparent;text-align:left}
+.bookmark-icon{width:27px;height:27px;display:grid;place-items:center;border-radius:9px;background:rgba(182,138,255,.12);color:#d8b5ff;font-size:11px;flex:none}
+.bookmark-name{font-size:11px;color:#e9ddfa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bookmark-remove{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;background:transparent;color:#786b8d;font-size:14px;opacity:0;transition:opacity .15s}
+.bookmark-card:hover .bookmark-remove,.bookmark-remove:focus-visible{opacity:1}
+.bookmark-remove:hover{color:#ff9bb6;background:rgba(255,130,165,.1)}
+.empty-state{font-size:11px;color:#847695;line-height:1.55;padding:9px 2px}
+.history-list{display:flex;flex-direction:column;gap:5px;max-height:132px;overflow:auto}
+.history-row{display:flex;align-items:center;gap:9px;width:100%;padding:7px 8px;border-radius:9px;background:transparent;text-align:left;transition:background .18s}
+.history-row:hover{background:rgba(182,138,255,.09)}
+.history-row .history-icon{width:25px;height:25px;display:grid;place-items:center;border-radius:8px;background:rgba(182,138,255,.1);color:#c7a4fa;flex:none}
+.history-row .history-copy{display:flex;flex-direction:column;min-width:0;flex:1;gap:2px}
+.history-row strong{font-size:10px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#ded1f0}
+.history-row small{font-size:9px;color:#81738f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shortcuts-hint{display:flex;justify-content:center;gap:13px;flex-wrap:wrap;margin-top:20px;color:#70647f;font-size:9px}
+kbd{font-family:inherit;padding:3px 6px;border:1px solid rgba(190,164,255,.16);border-radius:5px;background:rgba(255,255,255,.035);color:#a798ba;font-size:9px}
+#statusbar{height:25px;flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 13px;background:#100b1d;border-top:1px solid rgba(190,164,255,.1);font-size:9px;color:#8d7e9f;letter-spacing:.3px}
+.status-side{display:flex;align-items:center;gap:13px;min-width:0}.status-item{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}.status-dot{width:5px;height:5px;border-radius:50%;background:var(--good)}
+#msg{position:fixed;left:50%;bottom:42px;z-index:40;max-width:min(680px,92vw);padding:12px 16px;border-radius:13px;background:rgba(42,20,52,.96);border:1px solid rgba(255,151,188,.38);color:#ffd9e5;box-shadow:var(--shadow);font-size:12px;line-height:1.5;display:none;transform:translateX(-50%);animation:toast-in .22s ease-out}
+#settings-backdrop{position:fixed;inset:0;z-index:30;background:rgba(4,2,10,.58);backdrop-filter:blur(5px);opacity:0;visibility:hidden;transition:opacity .22s,visibility .22s}
+#settings-backdrop.open{opacity:1;visibility:visible}
+#settings-panel{position:absolute;right:0;top:0;height:100%;width:min(490px,96vw);display:flex;flex-direction:column;background:linear-gradient(165deg,#211636,#120d20 70%);border-left:1px solid rgba(206,177,255,.22);box-shadow:-25px 0 90px rgba(0,0,0,.46);transform:translateX(28px);transition:transform .26s cubic-bezier(.2,.8,.2,1)}
+#settings-backdrop.open #settings-panel{transform:translateX(0)}
+.settings-head{display:flex;align-items:center;justify-content:space-between;padding:20px 21px 17px;border-bottom:1px solid var(--line)}
+.settings-title{display:flex;align-items:center;gap:11px}.settings-title-mark{width:36px;height:36px;border-radius:12px;background:rgba(182,138,255,.15);color:#d7b5ff;display:grid;place-items:center}.settings-title strong{display:block;font-size:15px}.settings-title small{display:block;color:#9282a7;font-size:10px;margin-top:3px}
+.settings-layout{display:grid;grid-template-columns:130px minmax(0,1fr);flex:1;min-height:0}
+.settings-nav{padding:17px 10px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:5px}
+.settings-nav button{height:39px;display:flex;align-items:center;gap:9px;padding:0 10px;border-radius:10px;background:transparent;color:#a798ba;font-size:11px;text-align:left;transition:all .18s}
+.settings-nav button svg{width:16px;height:16px}.settings-nav-glyph{width:16px;display:inline-grid;place-items:center;font-size:15px;color:var(--accent-3);flex:none}.setting-value{font-size:9px;letter-spacing:.7px;color:var(--good);font-weight:800;white-space:nowrap}.compact-tabs .tab{min-width:88px;max-width:175px;padding-left:8px;gap:5px}.compact-tabs .tab-symbol{width:15px;height:15px}.settings-nav{overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(181,139,255,.3) transparent}.settings-nav button:hover{background:rgba(182,138,255,.08);color:#fff}.settings-nav button.active{background:linear-gradient(100deg,rgba(155,112,245,.22),rgba(182,138,255,.08));color:#f4e9ff;border:1px solid rgba(190,164,255,.14)}
+.settings-content{padding:20px;overflow:auto}.settings-section{display:none;animation:view-in .2s ease-out}.settings-section.active{display:block}
+.settings-section h3{font-size:15px;margin:0 0 5px}.section-description{font-size:10px;line-height:1.55;color:#9384a7;margin:0 0 18px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid rgba(190,164,255,.09)}
+.setting-row:last-child{border-bottom:0}.setting-copy{min-width:0}.setting-copy strong{display:block;font-size:11px;font-weight:700;color:#eee4fb}.setting-copy small{display:block;font-size:9px;line-height:1.5;color:#8d7e9f;margin-top:4px;max-width:270px}
+.setting-control{flex:none;max-width:155px}.setting-select{height:34px;max-width:155px;border-radius:9px;border:1px solid var(--line-strong);background:#211832;color:#eadef7;padding:0 9px;font-size:10px}
+.switch{position:relative;width:40px;height:23px;flex:none}.switch input{position:absolute;opacity:0;width:1px;height:1px}.switch span{position:absolute;inset:0;border-radius:30px;background:#493a5c;border:1px solid rgba(255,255,255,.12);transition:background .2s}.switch span:after{content:"";position:absolute;left:3px;top:3px;width:15px;height:15px;border-radius:50%;background:#d4c5e6;transition:transform .2s}.switch input:checked+span{background:linear-gradient(90deg,#8c65e7,#bf83ff)}.switch input:checked+span:after{transform:translateX(17px);background:white}.switch input:focus-visible+span{outline:2px solid var(--accent);outline-offset:3px}
+.settings-action{border:1px solid rgba(190,164,255,.2);background:rgba(182,138,255,.09);color:#e6d5ff;padding:8px 11px;border-radius:9px;font-size:10px;font-weight:750;transition:all .18s}.settings-action:hover{background:rgba(182,138,255,.17);border-color:rgba(190,164,255,.38)}.settings-action.danger{color:#ffb4c5;background:rgba(255,111,153,.07);border-color:rgba(255,111,153,.2)}
+.endpoint-card{border:1px solid var(--line);background:rgba(8,5,16,.28);padding:11px;border-radius:11px;margin:10px 0}.endpoint-line{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 0}.endpoint-line span:first-child{font-size:9px;color:#9384a7}.endpoint-line code{font-size:9px;color:#d9c7f3;overflow-wrap:anywhere;text-align:right}
+.diag-output{white-space:pre-wrap;overflow-wrap:anywhere;max-height:185px;overflow:auto;padding:11px;border-radius:10px;background:#0b0813;border:1px solid var(--line);font:10px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;color:#c9b9df;margin-top:12px;display:none}
+.settings-foot{padding:12px 20px;border-top:1px solid var(--line);font-size:9px;line-height:1.5;color:#81728f}
+body.reduced-motion *,body.reduced-motion *:before,body.reduced-motion *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.82)}}
+@keyframes tab-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes view-in{from{opacity:.55}to{opacity:1}}
+@keyframes float{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(25px,-20px,0) scale(1.12)}}
+@keyframes ring{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.07);opacity:.15}}
+@keyframes toast-in{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(max-width:760px){.appbar{padding:0 10px;gap:8px}.brand{min-width:0}.brand-copy small{display:none}.top-center{justify-content:flex-end}.session-pill{font-size:8px;padding:6px 8px}.app-actions{gap:1px}#tabs-shell{padding-left:7px;padding-right:7px}#bar{padding:8px;gap:5px}.nav{width:31px;height:32px}.address-wrap{height:40px;padding-left:10px;gap:6px}.go{padding:0 11px}.home-content{grid-template-columns:1fr}.hero{padding-top:8px}.home{padding-left:15px;padding-right:15px}.settings-layout{grid-template-columns:105px minmax(0,1fr)}.settings-nav{padding:12px 7px}.settings-nav button{padding:0 7px;font-size:10px}.settings-content{padding:15px}.tab{min-width:112px}}
+@media(max-width:480px){.brand-mark{width:31px;height:31px}.brand-copy strong{font-size:13px}.session-pill{letter-spacing:.3px}.app-actions .optional-mobile{display:none}.nav-group{gap:0}.nav{width:28px}.address-lock{display:none}#bq{font-size:11px}.address-wrap{padding:0 5px}.go{font-size:10px;padding:0 9px}.hero h1{letter-spacing:-1.8px}.hero-copy{font-size:12px}.hf{height:53px;padding-left:12px}.hf .go{height:39px;padding:0 13px}.bookmark-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.settings-layout{grid-template-columns:1fr}.settings-nav{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px}.settings-nav button{white-space:nowrap;flex:none;height:34px}.settings-nav button span:not(.settings-nav-glyph){display:none}.settings-nav-glyph{width:auto}.settings-content{padding:14px 17px}.setting-copy small{max-width:210px}#statusbar{padding:0 8px}.status-side{gap:8px}}
+
+/* v10 workspace polish */
+.view.loading:after{content:"";position:absolute;z-index:3;top:0;left:0;height:3px;width:38%;background:linear-gradient(90deg,transparent,var(--accent-3),#fff,transparent);box-shadow:0 0 14px var(--accent-2);animation:load-sweep 1.15s ease-in-out infinite;pointer-events:none}
+#stop:disabled{opacity:.32;cursor:default}
+.settings-action:focus-visible,.icon-btn:focus-visible,.nav:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#bookmark-file,#settings-file{display:none}
+#tab-context-menu{position:fixed;z-index:40;min-width:185px;padding:6px;border:1px solid var(--line-strong);border-radius:13px;background:rgba(25,17,43,.98);box-shadow:0 18px 54px rgba(0,0,0,.5);backdrop-filter:blur(18px);display:none;animation:menu-in .12s ease-out}
+#tab-context-menu.open{display:block}
+#tab-context-menu button{display:flex;align-items:center;width:100%;height:35px;padding:0 10px;border-radius:8px;background:transparent;color:#e7dcf7;text-align:left;font-size:11px;transition:background .15s}
+#tab-context-menu button:hover{background:rgba(182,138,255,.14)}
+#tab-context-menu button.danger{color:#ffadbf}
+#tab-context-menu .menu-separator{height:1px;margin:5px 4px;background:var(--line)}
+.permission-note{font-size:10px;line-height:1.55;color:var(--muted);padding:10px 12px;border-radius:10px;background:rgba(182,138,255,.06);border:1px solid var(--line);margin:8px 0 14px}
+@keyframes load-sweep{0%{transform:translateX(-110%)}100%{transform:translateX(380%)}}
+@keyframes menu-in{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.view.loading:after{animation:none;width:100%;opacity:.35}}
+
+/* ChrissysProxy v14 workspace hub */
+.brand{cursor:pointer}.brand:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:12px}
+.hub-tabs{width:min(960px,100%);display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 auto 22px;padding:6px;border:1px solid rgba(190,164,255,.13);border-radius:15px;background:rgba(20,13,35,.72);box-shadow:0 12px 35px rgba(0,0,0,.12);backdrop-filter:blur(14px)}
+.hub-tab-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 15px;border-radius:10px;background:transparent;color:#a99cbe;border:1px solid transparent;font-size:11px;font-weight:750;letter-spacing:.2px;transition:background .2s,color .2s,transform .2s,border-color .2s;cursor:pointer}
+.hub-tab-btn svg{width:16px;height:16px;flex:none}.hub-tab-btn:hover{background:rgba(182,138,255,.09);color:#fff;transform:translateY(-1px)}
+.hub-tab-btn.active{background:linear-gradient(105deg,rgba(155,112,245,.26),rgba(182,138,255,.12));border-color:rgba(190,164,255,.2);color:#f5eaff;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+.hub-pane{display:none;width:min(960px,100%);animation:view-in .2s ease-out}.hub-pane.active{display:block}
+.hub-heading{margin:4px 0 20px}.hub-heading h2{margin:0;color:#fff;font-size:clamp(27px,4vw,40px);letter-spacing:-1.7px;line-height:1.08}.hub-heading h2 span{background:linear-gradient(100deg,#d8b4ff,#a88aff 55%,#efb0ff);background-clip:text;-webkit-background-clip:text;color:transparent}.hub-heading p:not(.eyebrow){margin:9px 0 0;color:#a99cbe;font-size:12px;line-height:1.6;max-width:650px}
+.game-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.game-card{min-width:0;overflow:hidden;text-align:left;padding:0;border:1px solid rgba(190,164,255,.16);border-radius:17px;background:linear-gradient(145deg,rgba(35,25,59,.95),rgba(20,14,35,.96));box-shadow:0 12px 35px rgba(0,0,0,.16);transition:transform .22s,border-color .22s,box-shadow .22s;cursor:pointer}
+.game-card:hover{transform:translateY(-5px);border-color:rgba(203,166,255,.5);box-shadow:0 20px 45px rgba(0,0,0,.3),0 0 25px rgba(139,91,255,.12)}
+.game-art{height:142px;display:block;overflow:hidden;position:relative;background:#211436}.game-art:after{content:"";position:absolute;inset:40% 0 0;background:linear-gradient(transparent,rgba(10,6,20,.72));pointer-events:none}.game-art img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .45s cubic-bezier(.2,.8,.2,1),filter .3s}.game-card:hover .game-art img{transform:scale(1.07);filter:saturate(1.08)}
+.art-chip{position:absolute;z-index:1;top:10px;left:10px;padding:5px 8px;border-radius:99px;border:1px solid rgba(255,255,255,.22);background:rgba(18,9,32,.55);backdrop-filter:blur(9px);color:#f6eaff;font-size:8px;font-weight:850;letter-spacing:1.2px}
+.game-info{display:flex;flex-direction:column;gap:6px;padding:13px 13px 14px}.game-info strong{font-size:13px;color:#f5efff}.game-info small{font-size:10px;line-height:1.45;color:#9f90b5;min-height:30px}.game-cta{display:flex;justify-content:space-between;align-items:center;margin-top:5px;color:#d4b2ff;font-size:10px;font-weight:800}.game-cta b{font-size:15px}
+.hub-disclaimer{margin:16px 2px 0;color:#857795;font-size:10px;line-height:1.6}
+.app-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.app-card{display:flex;align-items:center;gap:11px;min-width:0;text-align:left;padding:13px;border:1px solid rgba(190,164,255,.14);border-radius:14px;background:linear-gradient(145deg,rgba(35,25,59,.82),rgba(22,15,38,.82));transition:all .2s;cursor:pointer}.app-card:hover{transform:translateY(-3px);border-color:rgba(198,162,255,.4);background:rgba(94,66,145,.23)}.app-card>span:nth-child(2){display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}.app-card strong{font-size:11px;color:#eee5ff}.app-card small{font-size:9px;color:#8e7fa4;line-height:1.4}.app-card>b{color:#bfa0ef;font-size:15px}.app-icon{width:37px;height:37px;display:grid;place-items:center;border-radius:12px;flex:none;background:rgba(182,138,255,.14);border:1px solid rgba(190,164,255,.14);color:#f6eaff;font-size:12px;font-weight:900}.app-green{background:linear-gradient(145deg,#215c4c,#123329);color:#a8f0d7}.app-orange{background:linear-gradient(145deg,#9e5829,#4f2a18);color:#ffd3a5}.app-blue{background:linear-gradient(145deg,#245b9a,#172b59);color:#b9d8ff}.app-dark{background:linear-gradient(145deg,#3a3550,#171523);color:#eee}.app-yellow{background:linear-gradient(145deg,#92712e,#463718);color:#ffe2a4}.app-pink{background:linear-gradient(145deg,#9d397c,#4c1a4b);color:#ffc2e9}
+.library-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.library-list{display:flex;flex-direction:column;gap:5px;max-height:300px;overflow:auto}.library-row{display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:9px;background:rgba(255,255,255,.025);border:1px solid transparent}.library-row:hover{background:rgba(182,138,255,.08);border-color:var(--line)}.library-row-main{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px;background:transparent;text-align:left}.library-row-main strong{font-size:10px;color:#eee5ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.library-row-main small{font-size:9px;color:#847795;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.library-row-remove{background:transparent;color:#9b8cac;padding:5px;border-radius:7px}.library-row-remove:hover{background:rgba(255,115,160,.1);color:#ffb8c9}
+.tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tool-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-height:150px;padding:17px;border:1px solid rgba(190,164,255,.15);border-radius:15px;background:linear-gradient(145deg,rgba(35,25,59,.86),rgba(22,15,38,.9));text-align:left;transition:all .2s;cursor:pointer}.tool-card:hover{transform:translateY(-3px);border-color:rgba(198,162,255,.42)}.tool-icon{width:35px;height:35px;border-radius:11px;display:grid;place-items:center;background:rgba(182,138,255,.16);color:#dfc3ff;font-size:18px}.tool-card strong{font-size:12px;color:#f3eaff}.tool-card small{font-size:10px;line-height:1.5;color:#9385a8;flex:1}.tool-card>span:last-child{font-size:10px;font-weight:800;color:#cbaaff}
+@media(max-width:900px){.game-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.app-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.hub-tabs{gap:4px;padding:5px;margin-bottom:17px}.hub-tab-btn{flex:1;min-width:0;padding:0 8px;font-size:9px;gap:5px}.hub-tab-btn svg{width:14px;height:14px}.game-grid{gap:9px}.game-art{height:112px}.game-info{padding:10px}.game-info strong{font-size:11px}.game-info small{font-size:9px}.app-grid,.library-grid,.tool-grid{grid-template-columns:1fr}.hub-heading h2{font-size:29px}}
+@media(prefers-reduced-motion:reduce){.hub-tab-btn,.game-card,.game-art img,.app-card,.tool-card{transition:none!important;animation:none!important}.game-card:hover,.app-card:hover,.tool-card:hover{transform:none}}
+
+
+/* v15: installable identity, command palette, notes, exports, and game deck */
+.brand-mark img{display:block;width:100%;height:100%;object-fit:cover;border-radius:10px}
+.app-icon svg,.tool-icon svg,.export-icon svg{width:20px;height:20px;display:block;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.game-filter{width:min(960px,100%);display:flex;align-items:center;gap:10px;padding:0 13px;height:44px;margin:-7px 0 16px;border:1px solid var(--line);border-radius:13px;background:rgba(10,7,20,.5)}
+.game-filter>svg{width:17px;height:17px;color:var(--accent-3);flex:none}.game-filter input{flex:1;min-width:0;height:100%;color:var(--text);background:transparent;border:0;outline:0;font-size:12px}.game-filter-hint{font-size:9px;letter-spacing:1px;color:var(--soft);font-weight:850;white-space:nowrap}
+.game-card[hidden]{display:none}
+.notes-shell{display:grid;grid-template-columns:minmax(190px,250px) minmax(0,1fr);gap:12px;min-height:330px}
+.notes-sidebar,.note-editor{border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,rgba(35,25,59,.86),rgba(16,11,29,.95));padding:13px;min-width:0}
+.notes-list-head,.note-editor-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.notes-list-head strong{font-size:9px;letter-spacing:1.7px;color:#cbb2ef}
+[data-role="note-search"]{width:100%;height:36px;padding:0 10px;background:rgba(7,5,15,.5);border:1px solid var(--line);border-radius:9px;color:var(--text);font-size:11px;outline:0}[data-role="note-search"]:focus,[data-role="note-title"]:focus,[data-role="note-body"]:focus{border-color:var(--accent)}
+.notes-list{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow:auto;margin-top:9px}.note-list-item{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;padding:10px;border:1px solid transparent;border-radius:10px;background:transparent;text-align:left;color:var(--text);cursor:pointer}.note-list-item:hover,.note-list-item.active{border-color:var(--line);background:rgba(182,138,255,.1)}.note-list-item strong{font-size:11px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.note-list-item small{font-size:9px;color:var(--soft)}
+.note-editor{display:flex;flex-direction:column;gap:10px}.note-state{font-size:9px;letter-spacing:1.2px;color:var(--good);font-weight:850}.mini-action{width:29px;height:29px;display:grid;place-items:center;border:1px solid var(--line);border-radius:9px;background:rgba(182,138,255,.1);color:#e8d6ff;font-size:17px}.mini-action:hover{background:rgba(182,138,255,.22)}.mini-action.danger{color:#ffabc1}
+[data-role="note-title"]{width:100%;height:40px;padding:0 11px;color:#fff;background:rgba(7,5,15,.45);border:1px solid var(--line);border-radius:9px;font-size:15px;font-weight:750;outline:0}[data-role="note-body"]{width:100%;min-height:180px;resize:vertical;padding:12px;color:#eae0fa;background:rgba(7,5,15,.42);border:1px solid var(--line);border-radius:10px;font-size:12px;line-height:1.65;outline:0}.note-editor-foot{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:var(--soft);font-size:9px}.note-editor-foot #note-updated{flex:1;min-width:90px}
+.export-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:14px}.export-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0;padding:16px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(145deg,rgba(42,29,68,.88),rgba(17,11,31,.92));text-align:left;transition:transform .2s,border-color .2s,box-shadow .2s}.export-card:hover{transform:translateY(-3px);border-color:var(--line-strong);box-shadow:0 14px 30px rgba(0,0,0,.2)}.export-icon{width:37px;height:37px;display:grid;place-items:center;border-radius:12px;background:rgba(182,138,255,.15);color:#d9baff}.export-card strong{font-size:12px}.export-card small{font-size:10px;line-height:1.5;color:var(--muted);min-height:30px}.export-card b{font-size:10px;color:var(--accent-3);margin-top:auto}.downloads-panel{margin-top:8px}.export-log{display:flex;flex-direction:column;gap:6px}.export-log-row{display:flex;align-items:center;gap:10px;padding:9px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.025)}.export-log-row svg{width:17px;height:17px;color:var(--accent-3)}.export-log-copy{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}.export-log-copy strong{font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.export-log-copy small{font-size:9px;color:var(--soft)}.export-log-status{font-size:8px;color:var(--good);letter-spacing:.8px;font-weight:850}
+.command-backdrop{position:fixed;inset:0;z-index:80;display:none;align-items:flex-start;justify-content:center;padding:12vh 16px 20px;background:rgba(5,3,13,.72);backdrop-filter:blur(10px)}.command-backdrop.open{display:flex;animation:view-in .13s ease-out}.command-panel{width:min(560px,100%);max-height:76vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(207,174,255,.26);border-radius:18px;background:linear-gradient(155deg,rgba(33,22,54,.98),rgba(15,10,27,.99));box-shadow:0 28px 90px rgba(0,0,0,.55),0 0 36px rgba(142,91,255,.16)}.command-top{display:flex;align-items:center;justify-content:space-between;padding:15px 17px 11px}.command-top>div{display:flex;flex-direction:column;gap:3px}.command-top strong{font-size:13px}.command-top small{font-size:10px;color:var(--muted)}.command-top>kbd,.command-foot kbd,.command-search-wrap>kbd{padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,.04);color:#b7a5d0;font-size:8px;font-family:inherit}
+.command-search-wrap{display:flex;align-items:center;gap:10px;margin:0 13px 10px;padding:0 11px;height:43px;border:1px solid rgba(190,164,255,.24);border-radius:11px;background:rgba(6,4,15,.46)}.command-search-wrap svg{width:17px;height:17px;color:var(--accent-3)}.command-search-wrap input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#fff;font-size:12px}.command-results{padding:0 8px 8px;overflow:auto}.command-group{padding:9px 9px 5px;color:var(--soft);font-size:8px;letter-spacing:1.4px;font-weight:850}.command-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:9px;background:transparent;color:#eee5ff;text-align:left;font-size:11px}.command-item:hover,.command-item.active{background:rgba(182,138,255,.15)}.command-item svg{width:17px;height:17px;color:var(--accent-3)}.command-icon{width:24px;height:24px;display:grid;place-items:center;border:1px solid var(--line);border-radius:7px;background:rgba(182,138,255,.09);color:var(--accent-3);font-size:13px;flex:none}.command-item span:nth-child(2){flex:1}.command-item small{color:var(--soft);font-size:9px}.command-foot{display:flex;gap:16px;align-items:center;padding:10px 15px;border-top:1px solid var(--line);color:var(--soft);font-size:9px}.command-foot span{display:flex;align-items:center;gap:4px}
+body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.reduced-motion .export-card,body.reduced-motion .note-list-item{animation:none!important;transition:none!important}
+@media(max-width:760px){.hub-tabs{overflow-x:auto;flex-wrap:nowrap;justify-content:flex-start}.hub-tab-btn{flex:none}.notes-shell{grid-template-columns:1fr}.notes-sidebar{max-height:220px}.notes-list{max-height:125px}.export-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.export-grid{grid-template-columns:1fr 1fr}.export-card{padding:12px}.note-editor-foot{gap:7px}.game-filter{margin-top:-2px}.command-backdrop{padding-top:8vh}}
+@media(prefers-reduced-motion:reduce){.command-backdrop,.command-item,.export-card,.note-list-item{animation:none!important;transition:none!important}}
+
+</style>
+</head>
+<body>
+<header class="appbar">
+  <div class="brand" id="brand-home" role="button" tabindex="0" aria-label="ChrissysProxy home">
+    <div class="brand-mark" aria-hidden="true"><img src="/assets/icons/icon-192.png" alt="" width="38" height="38"></div>
+    <div class="brand-copy"><strong>ChrissysProxy</strong><small>PRIVATE BROWSER</small></div>
+  </div>
+  <div class="top-center"><div class="session-pill" id="proxy-pill"><i class="pulse"></i><span id="proxy-pill-text">READY WHEN YOU ARE</span></div></div>
+  <div class="app-actions">
+    <button class="icon-btn optional-mobile" id="duplicate-tab" title="Duplicate current tab" aria-label="Duplicate current tab"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button>
+    <button class="icon-btn optional-mobile" id="reopen-tab" title="Reopen closed tab (Ctrl+Shift+T)" aria-label="Reopen closed tab">↶</button>
+    <button class="icon-btn" id="bookmark-page" title="Bookmark this page" aria-label="Bookmark this page" aria-pressed="false"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.8h12a1 1 0 0 1 1 1V21l-7-4-7 4V4.8a1 1 0 0 1 1-1Z"/></svg></button>
+    <button class="icon-btn optional-mobile" id="fullscreen-btn" title="Toggle fullscreen" aria-label="Toggle fullscreen"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"/></svg></button>
+    <button class="icon-btn" id="command-btn" title="Command palette (Ctrl+K)" aria-label="Open command palette"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="m8 9 2 2-2 2m4 0h4"/><path d="M7 2v2m10-2v2"/></svg></button>
+    <button class="icon-btn" id="settings-btn" title="Settings" aria-label="Settings"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.1.9-1.1 1.9-1.4-.5a7.8 7.8 0 0 1-1.5.9l-.3 1.5h-2.2l-.3-1.5a7.8 7.8 0 0 1-1.6-.9l-1.4.5-1.1-1.9 1.1-.9a7.6 7.6 0 0 1 0-1.8l-1.1-.9 1.1-1.9 1.4.5a7.8 7.8 0 0 1 1.6-.9l.3-1.5h2.2l.3 1.5a7.8 7.8 0 0 1 1.5.9l1.4-.5 1.1 1.9-1.1.9a7.6 7.6 0 0 1 0 1.8Z" transform="translate(-1 -1) scale(1.08)"/></svg></button>
+  </div>
+</header>
+<div id="tabs-shell"><div id="tabs" aria-label="Browser tabs"></div><button id="plus" title="New tab" aria-label="New tab">+</button><div class="tab-count" id="tab-count">1 TAB</div></div>
+<div id="tab-context-menu" role="menu" aria-label="Tab actions">
+  <button type="button" data-tab-action="new" role="menuitem">＋ New tab</button>
+  <button type="button" data-tab-action="duplicate" role="menuitem">▢ Duplicate tab</button>
+  <button type="button" data-tab-action="copy" role="menuitem">↗ Copy page address</button>
+  <button type="button" data-tab-action="reload" role="menuitem">⟳ Reload tab</button>
+  <button type="button" data-tab-action="pin" role="menuitem">◆ Pin tab</button>
+  <div class="menu-separator"></div>
+  <button type="button" data-tab-action="others" role="menuitem">Close other tabs</button>
+  <button type="button" data-tab-action="close" class="danger" role="menuitem">× Close tab</button>
+</div>
+<div id="bar">
+  <div class="nav-group">
+    <button class="nav" id="back" title="Back" aria-label="Back" disabled><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5-7 7 7 7M8 12h12"/></svg></button>
+    <button class="nav" id="fwd" title="Forward" aria-label="Forward" disabled><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9.5 5 7 7-7 7M16 12H4"/></svg></button>
+    <button class="nav" id="reload" title="Reload" aria-label="Reload"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.8-3L3 11m0-6v6h6M4 13a8 8 0 0 0 14.8 3L21 13m0 6v-6h-6"/></svg></button>
+    <button class="nav" id="stop" title="Stop loading" aria-label="Stop loading" disabled><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button>
+    <button class="nav optional-mobile" id="home-btn" title="Home" aria-label="Home"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/></svg></button>
+  </div>
+  <form id="bf" class="address-wrap" role="search">
+    <svg class="address-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/><path d="m9.5 15 1.7 1.7 3.4-3.4"/></svg>
+    <input id="bq" placeholder="Search the web or enter an address" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search the web or enter an address">
+    <button type="button" id="clear-address" title="Clear address" aria-label="Clear address">×</button>
+    <button class="go" type="submit">GO <span aria-hidden="true">↗</span></button>
+  </form>
+</div>
+<main id="views" aria-label="Browser content"></main>
+<footer id="statusbar">
+  <div class="status-side"><span class="status-item"><i class="status-dot" id="status-dot"></i><span id="status-left">ChrissysProxy is ready</span></span></div>
+  <div class="status-side"><span class="status-item" id="status-transport">TRANSPORT · AUTO</span><span class="status-item">CHRISSYSPROXY · PRIVATE WORKSPACE</span></div>
+</footer>
+<div id="msg" role="status" aria-live="polite"></div>
+
+<template id="tpl">
+  <section class="view">
+    <div class="home">
+      <nav class="hub-tabs" role="tablist" aria-label="ChrissysProxy workspace sections">
+        <button class="hub-tab-btn active" type="button" role="tab" aria-selected="true" data-hub-tab="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/></svg><span>Home</span></button>
+        <button class="hub-tab-btn" type="button" role="tab" aria-selected="false" data-hub-tab="games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h10a4 4 0 0 1 3.8 5l-1 3.5a2 2 0 0 1-3.2 1l-2.1-1.6h-5L7.4 17.5a2 2 0 0 1-3.2-1L3.2 13A4 4 0 0 1 7 8Z"/><path d="M8 11v4m-2-2h4m7-1h.01M17 14h.01"/></svg><span>Games</span></button>
+        <button class="hub-tab-btn" type="button" role="tab" aria-selected="false" data-hub-tab="apps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg><span>Apps</span></button>
+        <button class="hub-tab-btn" type="button" role="tab" aria-selected="false" data-hub-tab="library" aria-label="Library" title="Library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14a2 2 0 0 1 2 2v14H7a4 4 0 0 1-4-4V6a2 2 0 0 1 2-2Z"/><path d="M7 20V6a2 2 0 0 1 2-2M10 9h7M10 13h7"/></svg><span>Library</span></button>
+        <button class="hub-tab-btn" type="button" role="tab" aria-selected="false" data-hub-tab="notes" aria-label="Notes" title="Notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l5 5v13H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg><span>Notes</span></button>
+        <button class="hub-tab-btn" type="button" role="tab" aria-selected="false" data-hub-tab="downloads" aria-label="Downloads and exports" title="Downloads and exports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></svg><span>Downloads</span></button>
+        <button class="hub-tab-btn" type="button" role="tab" aria-selected="false" data-hub-tab="tools" aria-label="Tools" title="Tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6.5a4.5 4.5 0 0 0-5.8 5.8L3 17.5 6.5 21l5.2-5.2A4.5 4.5 0 0 0 17.5 10L21 6.5l-3.5-3.5Z"/></svg><span>Tools</span></button>
+      </nav>
+
+      <section class="hub-pane active" data-hub-pane="overview" role="tabpanel">
+        <div class="hero">
+          <div class="hero-emblem" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="#ead8ff" stroke-width="1.5"/><ellipse cx="20" cy="20" rx="6.5" ry="14.5" stroke="#ead8ff" stroke-width="1.3"/><path d="M5.8 20h28.4M8.5 12.5h23M8.5 27.5h23" stroke="#ead8ff" stroke-width="1.2" stroke-linecap="round"/><path d="m28.8 7.8 2.3-2.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <p class="eyebrow">YOUR SPACE. YOUR NEXT DISCOVERY.</p>
+          <h1>Welcome to<br><span>ChrissysProxy.</span></h1>
+          <p class="hero-copy">A purple browser workspace for the web, your favorite apps, games, and everything you want to keep close.</p>
+          <form class="hf" role="search"><svg class="search-glyph" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input placeholder="What are you looking for?" autocomplete="off" spellcheck="false"><button class="go" type="submit">SEARCH <span aria-hidden="true">↗</span></button></form>
+          <div class="hero-note">Your local bookmarks and recent pages stay in this browser workspace unless you clear them.</div>
+        </div>
+        <div class="home-content">
+          <section class="home-panel"><div class="panel-head"><div class="panel-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.8h12a1 1 0 0 1 1 1V21l-7-4-7 4V4.8a1 1 0 0 1 1-1Z"/></svg>YOUR BOOKMARKS</div><button class="text-action" type="button" data-action="bookmark-info">How to add</button></div><div class="bookmark-grid" data-role="bookmarks"></div></section>
+          <section class="home-panel"><div class="panel-head"><div class="panel-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>RECENT PAGES</div><button class="text-action" type="button" data-action="clear-history">Clear</button></div><div class="history-list" data-role="history"></div></section>
+        </div>
+        <div class="shortcuts-hint"><span><kbd>Ctrl</kbd> + <kbd>L</kbd> address bar</span><span><kbd>Ctrl</kbd> + <kbd>T</kbd> new tab</span><span><kbd>Ctrl</kbd> + <kbd>W</kbd> close tab</span><span><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd> reopen tab</span></div>
+      </section>
+
+      <section class="hub-pane" data-hub-pane="games" role="tabpanel">
+        <div class="hub-heading"><p class="eyebrow">PLAY SOMETHING GOOD</p><h2>Game <span>Deck</span></h2><p>Explore browser-game libraries. Open a platform in this tab and choose a game there.</p></div>
+        <div class="game-filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input type="search" data-role="game-search" placeholder="Search game libraries by name or genre…" aria-label="Filter game libraries"><span class="game-filter-hint">8 PICKS</span></div>
+        <div class="game-grid">
+          <button type="button" class="game-card" data-game-card data-game-filter="poki arcade casual puzzle sports racing multiplayer" data-launch-url="https://poki.com/" aria-label="Open Poki game library"><span class="game-art"><img src="/assets/games/arcade.webp" alt="Neon purple arcade cabinet artwork" loading="lazy"><span class="art-chip">ARCADE</span></span><span class="game-info"><strong>Poki</strong><small>Quick arcade, puzzle, racing and casual games</small><span class="game-cta">Explore games <b>↗</b></span></span></button>
+          <button type="button" class="game-card" data-game-card data-game-filter="crazygames action racing multiplayer 3d" data-launch-url="https://www.crazygames.com/" aria-label="Open CrazyGames"><span class="game-art"><img src="/assets/games/racing.webp" alt="Purple supercar racing beneath a moonlit sky" loading="lazy"><span class="art-chip">ACTION</span></span><span class="game-info"><strong>CrazyGames</strong><small>Action, racing, multiplayer and 3D games</small><span class="game-cta">Explore games <b>↗</b></span></span></button>
+          <button type="button" class="game-card" data-game-card data-game-filter="itch indie html5 platformer adventure" data-launch-url="https://itch.io/games/html5" aria-label="Open itch.io HTML5 games"><span class="game-art"><img src="/assets/games/adventure.webp" alt="Fantasy floating islands and a glowing portal" loading="lazy"><span class="art-chip">INDIE</span></span><span class="game-info"><strong>itch.io · HTML5</strong><small>Independent games and experiments that run in a browser</small><span class="game-cta">Explore games <b>↗</b></span></span></button>
+          <button type="button" class="game-card" data-game-card data-game-filter="armor games strategy puzzle adventure" data-launch-url="https://armorgames.com/" aria-label="Open Armor Games"><span class="game-art"><img src="/assets/games/puzzle.webp" alt="Glowing geometric purple puzzle gems" loading="lazy"><span class="art-chip">PUZZLE</span></span><span class="game-info"><strong>Armor Games</strong><small>Strategy, puzzle and adventure collections</small><span class="game-cta">Explore games <b>↗</b></span></span></button>
+          <button type="button" class="game-card" data-game-card data-game-filter="coolmath games puzzle logic math 2 player" data-launch-url="https://www.coolmathgames.com/" aria-label="Open Coolmath Games"><span class="game-art"><img src="/assets/games/sports.webp" alt="Neon violet sports arena artwork" loading="lazy"><span class="art-chip">PUZZLE + FUN</span></span><span class="game-info"><strong>Coolmath Games</strong><small>Logic, puzzle, physics and two-player games</small><span class="game-cta">Explore games <b>↗</b></span></span></button>
+          <button type="button" class="game-card" data-game-card data-game-filter="y8 arcade action sports strategy webgl" data-launch-url="https://www.y8.com/" aria-label="Open Y8 Games"><span class="game-art"><img src="/assets/games/platformer.webp" alt="Pixel platform adventure under a purple moon" loading="lazy"><span class="art-chip">ARCADE</span></span><span class="game-info"><strong>Y8</strong><small>Arcade, action, sports and WebGL collections</small><span class="game-cta">Explore games <b>↗</b></span></span></button>
+          <button type="button" class="game-card" data-game-card data-game-filter="newgrounds indie action rhythm platformer" data-launch-url="https://www.newgrounds.com/games" aria-label="Open Newgrounds games"><span class="game-art"><img src="/assets/games/boss-battle.webp" alt="Fantasy heroes facing a glowing crystal titan" loading="lazy"><span class="art-chip">INDIE</span></span><span class="game-info"><strong>Newgrounds</strong><small>Indie games, animation and community creations</small><span class="game-cta">Explore games <b>↗</b></span></span></button>
+          <button type="button" class="game-card" data-game-card data-game-filter="game jolt indie action strategy platformer" data-launch-url="https://gamejolt.com/games" aria-label="Open Game Jolt"><span class="game-art"><img src="/assets/games/strategy.webp" alt="Floating fantasy strategy islands and castle" loading="lazy"><span class="art-chip">COMMUNITY</span></span><span class="game-info"><strong>Game Jolt</strong><small>Indie games and creator communities</small><span class="game-cta">Explore games <b>↗</b></span></span></button>
+        </div>
+        <p class="hub-disclaimer">Game sites are third-party services. Availability depends on the site, your browser, and the network you are using. ChrissysProxy does not bypass school, workplace, or network access rules.</p>
+      </section>
+
+      <section class="hub-pane" data-hub-pane="apps" role="tabpanel">
+        <div class="hub-heading"><p class="eyebrow">YOUR WEB TOOLKIT</p><h2>App <span>Launchpad</span></h2><p>Useful web destinations for learning, creating, building, and getting organized.</p></div>
+        <div class="app-grid">
+          <button type="button" class="app-card" data-launch-url="https://www.khanacademy.org/"><span class="app-icon app-green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 5.5v16M8 8h8M8 12h6"/></svg></span><span><strong>Khan Academy</strong><small>Learning and practice</small></span><b>↗</b></button>
+          <button type="button" class="app-card" data-launch-url="https://scratch.mit.edu/"><span class="app-icon app-orange"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 4 6 6-9.8 9.8-6 1.2 1.2-6zM12 6l6 6M4.5 16.5l3 3"/></svg></span><span><strong>Scratch</strong><small>Create games and animations</small></span><b>↗</b></button>
+          <button type="button" class="app-card" data-launch-url="https://code.org/"><span class="app-icon app-blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5-5 7 5 7M16 5l5 7-5 7M14 4l-4 16"/></svg></span><span><strong>Code.org</strong><small>Learn computer science</small></span><b>↗</b></button>
+          <button type="button" class="app-card" data-launch-url="https://github.com/"><span class="app-icon app-dark"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 6H14a4 4 0 0 1 4 4v5.8M6 8.2v7.6a2.2 2.2 0 0 0 2.2 2.2H15.8"/></svg></span><span><strong>GitHub</strong><small>Code and project hosting</small></span><b>↗</b></button>
+          <button type="button" class="app-card" data-launch-url="https://docs.google.com/"><span class="app-icon app-yellow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v5h5M8 12h8M8 16h8"/></svg></span><span><strong>Google Docs</strong><small>Documents and writing</small></span><b>↗</b></button>
+          <button type="button" class="app-card" data-launch-url="https://www.photopea.com/"><span class="app-icon app-pink"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1.2a2 2 0 0 0 1.5-3.3 1.8 1.8 0 0 1 1.4-3h1.4A3.5 3.5 0 0 0 21 11.2 8.9 8.9 0 0 0 12 3Z"/><circle cx="7.5" cy="10" r="1"/><circle cx="11" cy="6.8" r="1"/><circle cx="16" cy="8.8" r="1"/></svg></span><span><strong>Photopea</strong><small>Browser-based image editing</small></span><b>↗</b></button>
+        </div>
+        <p class="hub-disclaimer">These are normal external services, not built-in apps. Some sites restrict embedding or require their own sign-in.</p>
+      </section>
+
+      <section class="hub-pane" data-hub-pane="library" role="tabpanel">
+        <div class="hub-heading"><p class="eyebrow">SAVED IN THIS BROWSER</p><h2>Your <span>Library</span></h2><p>Quickly reopen saved bookmarks and recent pages.</p></div>
+        <div class="library-grid">
+          <section class="home-panel"><div class="panel-head"><div class="panel-title">BOOKMARKS</div><span class="setting-value" data-role="bookmark-count">0 SAVED</span></div><div class="library-list" data-role="library-bookmarks"></div></section>
+          <section class="home-panel"><div class="panel-head"><div class="panel-title">RECENT PAGES</div><span class="setting-value" data-role="history-count">0 RECENT</span></div><div class="library-list" data-role="library-history"></div></section>
+        </div>
+        <p class="hub-disclaimer">Your library is stored in this browser's local storage. It is not synced between devices.</p>
+      </section>
+
+      <section class="hub-pane" data-hub-pane="notes" role="tabpanel">
+        <div class="hub-heading"><p class="eyebrow">YOUR PRIVATE WORKSPACE</p><h2>Quick <span>Notes</span></h2><p>Keep small notes and snippets in this browser profile. Notes stay on this device unless you export them.</p></div>
+        <div class="notes-shell">
+          <aside class="notes-sidebar"><div class="notes-list-head"><strong>MY NOTES</strong><button class="mini-action" data-role="new-note" type="button" aria-label="Create a note" title="Create a note">＋</button></div><input data-role="note-search" type="search" placeholder="Find a note…" aria-label="Search notes"><div data-role="note-list" class="notes-list"></div></aside>
+          <section class="note-editor" aria-label="Note editor"><div class="note-editor-top"><span class="note-state" data-role="note-state">LOCAL ONLY</span><button class="mini-action danger" data-role="delete-note" type="button" title="Delete selected note" aria-label="Delete selected note">⌫</button></div><input data-role="note-title" maxlength="90" placeholder="Untitled note" aria-label="Note title"><textarea data-role="note-body" maxlength="8000" placeholder="Write something worth keeping…" aria-label="Note contents"></textarea><div class="note-editor-foot"><span data-role="note-updated">Saved on this device</span><span data-role="note-counter">0 / 8000</span><button class="settings-action" data-role="save-note" type="button">Save note</button></div></section>
+        </div>
+      </section>
+
+      <section class="hub-pane" data-hub-pane="downloads" role="tabpanel">
+        <div class="hub-heading"><p class="eyebrow">YOUR FILES &amp; BACKUPS</p><h2>Downloads <span>&amp; Exports</span></h2><p>Export your ChrissysProxy bookmarks, history, settings, and local notes. Website downloads are handled by your browser and source site.</p></div>
+        <div class="export-grid">
+          <button class="export-card" type="button" data-export-action="bookmarks"><span class="export-icon"><svg viewBox="0 0 24 24"><path d="M6 3.8h12a1 1 0 0 1 1 1V21l-7-4-7 4V4.8a1 1 0 0 1 1-1Z"/></svg></span><strong>Bookmarks backup</strong><small>Save your saved pages as JSON.</small><b>Export ↗</b></button>
+          <button class="export-card" type="button" data-export-action="history"><span class="export-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span><strong>History backup</strong><small>Save your recent page list as JSON.</small><b>Export ↗</b></button>
+          <button class="export-card" type="button" data-export-action="settings"><span class="export-icon"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></svg></span><strong>Settings backup</strong><small>Save appearance and browser preferences.</small><b>Export ↗</b></button>
+          <button class="export-card" type="button" data-export-action="notes"><span class="export-icon"><svg viewBox="0 0 24 24"><path d="M7 3h8l5 5v13H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"/><path d="M14 3v6h6M8 13h8M8 17h6"/></svg></span><strong>Notes backup</strong><small>Save your private local notes as JSON.</small><b>Export ↗</b></button>
+        </div>
+        <section class="home-panel downloads-panel"><div class="panel-head"><div class="panel-title">RECENT EXPORTS</div><button class="text-action" data-role="export-log-clear" type="button">Clear list</button></div><div data-role="export-log" class="export-log"></div></section>
+        <p class="hub-disclaimer">This list tracks backups generated by ChrissysProxy. Downloads started by third-party websites appear in your browser's normal Downloads manager when supported.</p>
+      </section>
+
+      <section class="hub-pane" data-hub-pane="tools" role="tabpanel">
+        <div class="hub-heading"><p class="eyebrow">WORKSPACE CONTROL CENTER</p><h2>Quick <span>Tools</span></h2><p>Manage your connection, preferences, and browser diagnostics.</p></div>
+        <div class="tool-grid">
+          <button class="tool-card" type="button" data-open-settings="connection"><span class="tool-icon">⇄</span><strong>Connection settings</strong><small>Choose Auto, Libcurl, or Epoxy and inspect the Wisp endpoint.</small><span>Open settings ↗</span></button>
+          <button class="tool-card" type="button" data-open-settings="diagnostics"><span class="tool-icon">⌁</span><strong>Diagnostics</strong><small>Check server health, required assets, browser support, and WebSocket status.</small><span>Run diagnostics ↗</span></button>
+          <button class="tool-card" type="button" data-open-settings="privacy"><span class="tool-icon">◇</span><strong>Privacy &amp; data</strong><small>Manage local history, bookmarks, backups, and sign-out.</small><span>Manage privacy ↗</span></button>
+          <button class="tool-card" type="button" data-open-settings="appearance"><span class="tool-icon">✦</span><strong>Appearance</strong><small>Switch purple themes and animation preferences.</small><span>Personalize ↗</span></button>
+          <button class="tool-card" type="button" data-hub-jump="notes"><span class="tool-icon"><svg viewBox="0 0 24 24"><path d="M7 3h8l5 5v13H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg></span><strong>Quick Notes</strong><small>Capture ideas and snippets locally.</small><span>Open notes ↗</span></button>
+          <button class="tool-card" type="button" data-hub-jump="downloads"><span class="tool-icon"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></svg></span><strong>Backups &amp; exports</strong><small>Save your bookmarks, history, and settings.</small><span>Open downloads ↗</span></button>
+          <button class="tool-card" type="button" data-command-open><span class="tool-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="m8 9 2 2-2 2m4 0h4"/></svg></span><strong>Command palette</strong><small>Jump to sections or run browser actions from the keyboard.</small><span>Open palette ↗</span></button>
+        </div>
+      </section>
+    </div>
+    <iframe title="Proxied webpage" referrerpolicy="no-referrer" allow="fullscreen; clipboard-read; clipboard-write"></iframe>
+  </section>
+</template>
+
+<div id="command-backdrop" class="command-backdrop" aria-hidden="true"><section class="command-panel" role="dialog" aria-modal="true" aria-labelledby="command-heading"><div class="command-top"><div><strong id="command-heading">Command palette</strong><small>Jump anywhere in ChrissysProxy</small></div><kbd>ESC</kbd></div><label class="command-search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="command-search" type="search" placeholder="Type a command…" autocomplete="off" aria-label="Search commands"><kbd>CTRL K</kbd></label><div id="command-results" class="command-results" role="listbox" aria-label="Available commands"></div><div class="command-foot"><span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span><span><kbd>ENTER</kbd> Run command</span></div></section></div>
+
+<div id="settings-backdrop" aria-hidden="true">
+  <aside id="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-heading">
+    <div class="settings-head"><div class="settings-title"><div class="settings-title-mark"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.1.9-1.1 1.9-1.4-.5a7.8 7.8 0 0 1-1.5.9l-.3 1.5h-2.2l-.3-1.5a7.8 7.8 0 0 1-1.6-.9l-1.4.5-1.1-1.9 1.1-.9a7.6 7.6 0 0 1 0-1.8l-1.1-.9 1.1-1.9 1.4.5a7.8 7.8 0 0 1 1.6-.9l.3-1.5h2.2l.3 1.5a7.8 7.8 0 0 1 1.5.9l1.4-.5 1.1 1.9-1.1.9a7.6 7.6 0 0 1 0 1.8Z" transform="translate(-1 -1) scale(1.08)"/></svg></div><div><strong id="settings-heading">Settings</strong><small>Make ChrissysProxy feel like yours</small></div></div><button class="icon-btn" id="settings-close" aria-label="Close settings" title="Close settings">×</button></div>
+    <div class="settings-layout">
+      <nav class="settings-nav" aria-label="Settings sections">
+        <button class="active" type="button" data-settings-tab="general" aria-label="General settings" title="General settings"><span class="settings-nav-glyph" aria-hidden="true">⌂</span><span>General</span></button>
+        <button type="button" data-settings-tab="appearance" aria-label="Appearance settings" title="Appearance settings"><span class="settings-nav-glyph" aria-hidden="true">✦</span><span>Appearance</span></button>
+        <button type="button" data-settings-tab="search" aria-label="Search settings" title="Search settings"><span class="settings-nav-glyph" aria-hidden="true">⌕</span><span>Search</span></button>
+        <button type="button" data-settings-tab="tabs" aria-label="Tab settings" title="Tab settings"><span class="settings-nav-glyph" aria-hidden="true">▣</span><span>Tabs</span></button>
+        <button type="button" data-settings-tab="privacy" aria-label="Privacy settings" title="Privacy settings"><span class="settings-nav-glyph" aria-hidden="true">◇</span><span>Privacy</span></button>
+        <button type="button" data-settings-tab="permissions" aria-label="Permission settings" title="Permission settings"><span class="settings-nav-glyph" aria-hidden="true">✓</span><span>Permissions</span></button>
+        <button type="button" data-settings-tab="connection" aria-label="Connection settings" title="Connection settings"><span class="settings-nav-glyph" aria-hidden="true">⇄</span><span>Connection</span></button>
+        <button type="button" data-settings-tab="advanced" aria-label="Advanced settings" title="Advanced settings"><span class="settings-nav-glyph" aria-hidden="true">⚙</span><span>Advanced</span></button>
+        <button type="button" data-settings-tab="diagnostics" aria-label="Diagnostics" title="Diagnostics"><span class="settings-nav-glyph" aria-hidden="true">⌁</span><span>Diagnostics</span></button>
+        <button type="button" data-settings-tab="about" aria-label="About ChrissysProxy" title="About ChrissysProxy"><span class="settings-nav-glyph" aria-hidden="true">ⓘ</span><span>About</span></button>
+      </nav>
+      <div class="settings-content">
+        <section class="settings-section active" data-settings-section="general"><h3>General</h3><p class="section-description">Choose how ChrissysProxy opens and remembers your workspace.</p>
+          <div class="setting-row"><div class="setting-copy"><strong>Show recent pages</strong><small>Display pages you have opened on the new-tab screen.</small></div><label class="switch"><input id="history-toggle" type="checkbox" checked><span></span></label></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Restore tabs on next visit</strong><small>Remember up to eight open website addresses on this device.</small></div><label class="switch"><input id="restore-toggle" type="checkbox" checked><span></span></label></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Open settings</strong><small>Settings are stored locally in this browser profile.</small></div><span class="setting-value">LOCAL PREFERENCES</span></div>
+        </section>
+        <section class="settings-section" data-settings-section="appearance"><h3>Appearance</h3><p class="section-description">Keep ChrissysProxy purple and tune the visual experience.</p>
+          <div class="setting-row"><div class="setting-copy"><strong>Color atmosphere</strong><small>Choose the purple shade used throughout ChrissysProxy.</small></div><select class="setting-select setting-control" id="theme-select"><option value="aurora">Aurora purple</option><option value="nebula">Nebula violet</option><option value="plum">Plum glow</option></select></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Motion and animations</strong><small>Tab transitions, soft glows, and interface movement.</small></div><label class="switch"><input id="motion-toggle" type="checkbox" checked><span></span></label></div>
+        </section>
+        <section class="settings-section" data-settings-section="search"><h3>Search</h3><p class="section-description">Choose what ChrissysProxy uses when you type words instead of a web address.</p>
+          <div class="setting-row"><div class="setting-copy"><strong>Default search engine</strong><small>This affects searches from both address bars.</small></div><select class="setting-select setting-control" id="engine-select"><option value="duckduckgo">DuckDuckGo</option><option value="brave">Brave Search</option><option value="google">Google</option><option value="bing">Bing</option></select></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Search suggestions</strong><small>ChrissysProxy does not send keystrokes to a suggestion service. Searches run after you submit.</small></div><span class="setting-value">OFF BY DESIGN</span></div>
+        </section>
+        <section class="settings-section" data-settings-section="tabs"><h3>Tabs</h3><p class="section-description">Set a comfortable tab limit and choose a compact tab strip.</p>
+          <div class="setting-row"><div class="setting-copy"><strong>Maximum open tabs</strong><small>Limits the number of tabs in this workspace. Existing tabs are not closed when you lower the limit.</small></div><select class="setting-select setting-control" id="max-tabs-select"><option value="8">8 tabs</option><option value="12">12 tabs</option><option value="16">16 tabs</option><option value="24">24 tabs</option></select></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Compact tab strip</strong><small>Use narrower tabs to keep more of your workspace visible.</small></div><label class="switch"><input id="compact-tabs-toggle" type="checkbox"><span></span></label></div>
+          <div class="permission-note">The maximum applies to new tabs. ChrissysProxy keeps your current tabs intact if you lower the limit.</div>
+        </section>
+        <section class="settings-section" data-settings-section="privacy"><h3>Privacy &amp; data</h3><p class="section-description">Control the information this browser workspace stores on this device.</p>
+          <div class="setting-row"><div class="setting-copy"><strong>Clear recent pages</strong><small>Remove the locally saved browsing list. This does not clear website data.</small></div><button class="settings-action" id="clear-history-setting" type="button">Clear history</button></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Export recent pages</strong><small>Download a JSON copy of your local ChrissysProxy history.</small></div><button class="settings-action" id="export-history" type="button">Export history</button></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Remove bookmarks</strong><small>Delete bookmarks saved in this ChrissysProxy workspace.</small></div><button class="settings-action" id="clear-bookmarks-setting" type="button">Clear bookmarks</button></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Export bookmarks</strong><small>Download your bookmarks as a JSON file.</small></div><button class="settings-action" id="export-bookmarks" type="button">Export</button></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Import bookmarks</strong><small>Restore bookmarks from a ChrissysProxy JSON export.</small></div><button class="settings-action" id="import-bookmarks" type="button">Import</button><input id="bookmark-file" type="file" accept="application/json,.json"></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Forget this device's ChrissysProxy data</strong><small>Clears ChrissysProxy preferences, bookmarks, recent pages, and saved tabs. Website accounts and server logs are separate.</small></div><button class="settings-action danger" id="forget-data" type="button">Forget data</button></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Sign out</strong><small>End this device's private ChrissysProxy session.</small></div><button class="settings-action" id="logout" type="button">Sign out</button></div>
+        </section>
+        <section class="settings-section" data-settings-section="permissions"><h3>Site permissions</h3><p class="section-description">Choose which browser capabilities embedded websites may request through ChrissysProxy.</p>
+          <div class="setting-row"><div class="setting-copy"><strong>Autoplay audio and video</strong><small>Allow embedded pages to request automatic playback. Browser policies may still require interaction.</small></div><label class="switch"><input id="autoplay-toggle" type="checkbox"><span></span></label></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Clipboard access</strong><small>Allow embedded pages to request clipboard read/write access. Browser permission prompts still apply.</small></div><label class="switch"><input id="clipboard-toggle" type="checkbox"><span></span></label></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Fullscreen</strong><small>Allow embedded pages to request fullscreen mode.</small></div><label class="switch"><input id="fullscreen-toggle" type="checkbox" checked><span></span></label></div>
+          <div class="permission-note">These preferences do not override browser prompts, website policies, device management, or school/work network rules. Only enable permissions for sites you trust.</div>
+        </section>
+        <section class="settings-section" data-settings-section="connection"><h3>Connection</h3><p class="section-description">Choose a supported transport and inspect the components used by this deployment.</p>
+          <div class="setting-row"><div class="setting-copy"><strong>Transport mode</strong><small>Auto tries the available transport. Alternate modes are for connection compatibility, not for overriding a site's or network's access rules.</small></div><select class="setting-select setting-control" id="transport-select"><option value="auto">Automatic</option><option value="libcurl">Libcurl</option><option value="epoxy">Epoxy</option></select></div>
+          <div class="endpoint-card"><div class="endpoint-line"><span>PROXY ROUTE</span><code>/~/sj/</code></div><div class="endpoint-line"><span>WEBSOCKET ENDPOINT</span><code id="wisp-endpoint">wss://…/wisp/</code></div><div class="endpoint-line"><span>ACTIVE BUILD</span><code id="build-label">chrissysproxy-20261030-15</code></div></div>
+          <div class="permission-note">ChrissysProxy does not delete Scramjet databases automatically. If the browser reports a missing IndexedDB store, close every ChrissysProxy tab and clear only this site's stored data using browser site settings.</div>
+        </section>
+        <section class="settings-section" data-settings-section="advanced"><h3>Advanced</h3><p class="section-description">Back up your preferences or restore the defaults for this device.</p>
+          <div class="setting-row"><div class="setting-copy"><strong>Export ChrissysProxy settings</strong><small>Download your appearance, search, tab, and permission preferences as JSON.</small></div><button class="settings-action" id="export-settings" type="button">Export settings</button></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Import ChrissysProxy settings</strong><small>Restore settings from a ChrissysProxy JSON backup. Invalid files are rejected.</small></div><button class="settings-action" id="import-settings" type="button">Import settings</button><input id="settings-file" type="file" accept="application/json,.json"></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Restore default preferences</strong><small>Resets ChrissysProxy preferences only. It does not delete bookmarks or browsing history.</small></div><button class="settings-action danger" id="reset-settings" type="button">Reset settings</button></div>
+        </section>
+        <section class="settings-section" data-settings-section="diagnostics"><h3>Diagnostics</h3><p class="section-description">Run real server, asset, browser-support, and authenticated WebSocket checks.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="settings-action" id="run-diagnostics" type="button">Run full diagnostics</button><button class="settings-action" id="test-wisp" type="button">Test WebSocket</button><button class="settings-action" id="copy-diagnostics" type="button">Copy results</button></div>
+          <pre class="diag-output" id="diag-output"></pre>
+          <div class="permission-note">A successful WebSocket handshake proves the connection opened; it does not alone prove that an external website will load. Test a permitted HTTPS page after diagnostics pass.</div>
+        </section>
+        <section class="settings-section" data-settings-section="about"><h3>About ChrissysProxy</h3><p class="section-description">ChrissysProxy is a private browser workspace built around a separate proxy connection.</p>
+          <div class="endpoint-card"><div class="endpoint-line"><span>APPLICATION</span><code>ChrissysProxy</code></div><div class="endpoint-line"><span>BUILD</span><code>chrissysproxy-20261030-15</code></div><div class="endpoint-line"><span>RUNTIME</span><code>Node.js 22</code></div><div class="endpoint-line"><span>BROWSER ENGINE</span><code>Scramjet 1.x</code></div><div class="endpoint-line"><span>TRANSPORT MANAGER</span><code>BareMux 2.x</code></div><div class="endpoint-line"><span>TRANSPORTS</span><code>Libcurl / Epoxy</code></div><div class="endpoint-line"><span>WEBSOCKET</span><code>Wisp JS</code></div></div>
+          <p class="section-description">ChrissysProxy cannot guarantee availability for every website. Sites may block proxy traffic or require their own authentication, permissions, or supported browser features.</p>
+        </section>
+      </div>
+
+    </div>
+    <div class="settings-foot">ChrissysProxy is a browser workspace. Website availability and data handling are also governed by the sites and proxy server you connect to.</div>
+  </aside>
+</div>
+
+<script type="module" src="/app.js?build=chrissysproxy-20261030-15"></script>
+</body>
+</html>

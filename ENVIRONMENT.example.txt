@@ -1,0 +1,5 @@
+# Local development only. Do not commit a real .env file.
+NODE_ENV=development
+PORT=8080
+PORTAL_ACCESS_PASSWORD=use-a-private-random-password-with-at-least-20-characters
+PORTAL_SESSION_SECRET=use-a-different-random-secret-with-at-least-32-characters

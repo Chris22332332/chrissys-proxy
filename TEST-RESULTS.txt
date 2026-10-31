@@ -1,0 +1,14 @@
+CHRISSYSPROXY v15 TEST SUMMARY
+
+48/48 Node unit tests passed.
+74 source/configuration checks passed.
+JavaScript syntax checks passed.
+HTML selector audit passed: 61 JavaScript ID lookups exist; 67 unique HTML IDs; no duplicates.
+Hidden-dotfile upload simulation passed.
+PWA icon/manifest and eight local game-art assets passed presence checks.
+Notes and command palette core tests passed.
+Wisp upgrade/security tests passed.
+
+NOT VERIFIED: This workspace could not reach registry.npmjs.org (EAI_AGAIN), so a fresh dependency install and real installed-package preflight could not be completed. Real server startup, live Wisp handshake, and external website through Scramjet also remain unverified. Confirm these on Render before calling the live proxy operational.
+
+The package uses npm install (not npm ci) because no package-lock.json was generated here. Do not treat local unit tests as proof of successful deployment or proxy traffic.
