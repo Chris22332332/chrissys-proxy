@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { normalizePortalSettings, validateSettingsBackup } from '../public/settings-core.js';
 
 const defaults = {
-  theme: 'aurora', animations: true, saveHistory: true, restoreSession: true,
+  theme: 'aurora', animations: true, lowLagMode: false, saveHistory: true, restoreSession: true,
   searchEngine: 'brave', transport: 'auto', allowAutoplay: false,
   allowClipboard: false, allowFullscreen: true, maxTabs: 16, compactTabs: false
 };
@@ -16,12 +16,13 @@ test('settings normalization returns defaults for null, arrays, and invalid inpu
 });
 
 test('settings normalization preserves supported choices', () => {
-  const result = normalizePortalSettings({ theme: 'plum', searchEngine: 'brave', transport: 'epoxy', maxTabs: '24', compactTabs: true }, defaults, engines, limits);
+  const result = normalizePortalSettings({ theme: 'plum', searchEngine: 'brave', transport: 'epoxy', maxTabs: '24', compactTabs: true, lowLagMode: true }, defaults, engines, limits);
   assert.equal(result.theme, 'plum');
   assert.equal(result.searchEngine, 'brave');
   assert.equal(result.transport, 'epoxy');
   assert.equal(result.maxTabs, 24);
   assert.equal(result.compactTabs, true);
+  assert.equal(result.lowLagMode, true);
 });
 
 test('settings normalization rejects unknown enum values and invalid tab limits', () => {
@@ -33,10 +34,11 @@ test('settings normalization rejects unknown enum values and invalid tab limits'
 });
 
 test('string booleans do not accidentally enable privacy or permission toggles', () => {
-  const result = normalizePortalSettings({ saveHistory: 'false', allowAutoplay: 'true', compactTabs: 'true' }, defaults, engines, limits);
+  const result = normalizePortalSettings({ saveHistory: 'false', allowAutoplay: 'true', compactTabs: 'true', lowLagMode: 'true' }, defaults, engines, limits);
   assert.equal(result.saveHistory, defaults.saveHistory);
   assert.equal(result.allowAutoplay, defaults.allowAutoplay);
   assert.equal(result.compactTabs, defaults.compactTabs);
+  assert.equal(result.lowLagMode, defaults.lowLagMode);
 });
 
 test('unknown imported properties are discarded', () => {

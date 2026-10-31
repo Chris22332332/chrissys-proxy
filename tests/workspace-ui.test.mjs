@@ -83,6 +83,13 @@ test('tools cards open actual settings and workspace sections', () => {
   assert.ok(html.includes('data-hub-jump="downloads"'));
 });
 
+test('low-lag setting disables expensive interface effects and persists as a boolean preference', () => {
+  assert.match(html, /id="low-lag-toggle"/);
+  assert.match(html, /body\.low-lag[^\n]*backdrop-filter:none/);
+  assert.match(app, /classList\.toggle\('low-lag', !!settings\.lowLagMode\)/);
+  assert.match(app, /settings\.lowLagMode = this\.checked/);
+});
+
 test('brand home control is keyboard accessible', () => {
   assert.match(html, /id="brand-home" role="button" tabindex="0"/);
   assert.match(app, /\$\('brand-home'\)\.addEventListener\('keydown'/);

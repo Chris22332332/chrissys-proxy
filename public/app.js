@@ -6,7 +6,7 @@ import { filterCommands } from './command-core.js';
 'use strict';
 
 const $ = (id) => document.getElementById(id);
-const BUILD_ID = 'chrissysproxy-20261031-24';
+const BUILD_ID = 'chrissysproxy-20261031-25';
 const DEFAULT_MAX_TABS = 16;
 const ALLOWED_MAX_TABS = [8, 12, 16, 24];
 const SCRIPT_TIMEOUT_MS = 20000;
@@ -20,7 +20,7 @@ const KEYS = {
   exports: 'chrissys-export-log-v1'
 };
 const defaults = {
-  theme: 'aurora', animations: true, saveHistory: true, restoreSession: true,
+  theme: 'aurora', animations: true, lowLagMode: false, saveHistory: true, restoreSession: true,
   searchEngine: 'brave', transport: 'auto', allowAutoplay: false,
   allowClipboard: false, allowFullscreen: true, maxTabs: DEFAULT_MAX_TABS, compactTabs: false
 };
@@ -119,9 +119,11 @@ function hostOf(value) {
 function applySettings() {
   document.documentElement.dataset.accent = settings.theme;
   document.body.classList.toggle('reduced-motion', !settings.animations);
+  document.body.classList.toggle('low-lag', !!settings.lowLagMode);
   document.body.classList.toggle('compact-tabs', !!settings.compactTabs);
   $('theme-select').value = settings.theme;
   $('motion-toggle').checked = !!settings.animations;
+  $('low-lag-toggle').checked = !!settings.lowLagMode;
   $('history-toggle').checked = !!settings.saveHistory;
   $('restore-toggle').checked = !!settings.restoreSession;
   $('engine-select').value = settings.searchEngine;
@@ -1097,6 +1099,7 @@ function bindEvents() {
   document.querySelectorAll('[data-settings-tab]').forEach((button) => button.addEventListener('click', () => selectSettings(button.dataset.settingsTab)));
   $('theme-select').addEventListener('change', function () { settings.theme = this.value; saveSettings(); applySettings(); });
   $('motion-toggle').addEventListener('change', function () { settings.animations = this.checked; saveSettings(); applySettings(); });
+  $('low-lag-toggle').addEventListener('change', function () { settings.lowLagMode = this.checked; saveSettings(); applySettings(); say(`Low-lag mode ${this.checked ? 'enabled' : 'disabled'} for the ChrissysProxy interface.`); });
   $('history-toggle').addEventListener('change', function () { settings.saveHistory = this.checked; if (!settings.saveHistory) writeJSON(KEYS.history, []); saveSettings(); tabs.forEach(renderHome); });
   $('restore-toggle').addEventListener('change', function () { settings.restoreSession = this.checked; saveSettings(); if (!this.checked) localStorage.removeItem(KEYS.session); say('Session restore preference saved.'); });
   $('engine-select').addEventListener('change', function () { settings.searchEngine = this.value; saveSettings(); say('Search engine updated.'); });

@@ -11,7 +11,7 @@ export function normalizePortalSettings(value, defaults, allowedSearchEngines, a
   if (!allowedSearchEngines.includes(normalized.searchEngine)) normalized.searchEngine = defaults.searchEngine;
   if (!['auto', 'libcurl', 'epoxy'].includes(normalized.transport)) normalized.transport = defaults.transport;
 
-  for (const key of ['animations', 'saveHistory', 'restoreSession', 'allowAutoplay', 'allowClipboard', 'allowFullscreen', 'compactTabs']) {
+  for (const key of ['animations', 'lowLagMode', 'saveHistory', 'restoreSession', 'allowAutoplay', 'allowClipboard', 'allowFullscreen', 'compactTabs']) {
     if (typeof normalized[key] !== 'boolean') normalized[key] = defaults[key];
   }
 

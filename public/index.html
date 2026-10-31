@@ -152,6 +152,8 @@ kbd{font-family:inherit;padding:3px 6px;border:1px solid rgba(190,164,255,.16);b
 .diag-output{white-space:pre-wrap;overflow-wrap:anywhere;max-height:185px;overflow:auto;padding:11px;border-radius:10px;background:#0b0813;border:1px solid var(--line);font:10px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;color:#c9b9df;margin-top:12px;display:none}
 .settings-foot{padding:12px 20px;border-top:1px solid var(--line);font-size:9px;line-height:1.5;color:#81728f}
 body.reduced-motion *,body.reduced-motion *:before,body.reduced-motion *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+body.low-lag *,body.low-lag *:before,body.low-lag *:after{animation:none!important;transition:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;filter:none!important}
+body.low-lag .home:before,body.low-lag .home:after,body.low-lag .pulse,body.low-lag .view.loading:after{display:none!important}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.82)}}
 @keyframes tab-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 @keyframes view-in{from{opacity:.55}to{opacity:1}}
@@ -403,6 +405,7 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
         <section class="settings-section" data-settings-section="appearance"><h3>Appearance</h3><p class="section-description">Keep ChrissysProxy purple and tune the visual experience.</p>
           <div class="setting-row"><div class="setting-copy"><strong>Color atmosphere</strong><small>Choose the purple shade used throughout ChrissysProxy.</small></div><select class="setting-select setting-control" id="theme-select"><option value="aurora">Aurora purple</option><option value="nebula">Nebula violet</option><option value="plum">Plum glow</option></select></div>
           <div class="setting-row"><div class="setting-copy"><strong>Motion and animations</strong><small>Tab transitions, soft glows, and interface movement.</small></div><label class="switch"><input id="motion-toggle" type="checkbox" checked><span></span></label></div>
+          <div class="setting-row"><div class="setting-copy"><strong>Low-lag mode</strong><small>Turns off interface blur, shadows, glows, and animations. This only affects ChrissysProxy’s interface.</small></div><label class="switch"><input id="low-lag-toggle" type="checkbox"><span></span></label></div>
         </section>
         <section class="settings-section" data-settings-section="search"><h3>Search</h3><p class="section-description">Choose what ChrissysProxy uses when you type words instead of a web address.</p>
           <div class="setting-row"><div class="setting-copy"><strong>Default search engine</strong><small>This affects searches from both address bars.</small></div><select class="setting-select setting-control" id="engine-select"><option value="duckduckgo">DuckDuckGo</option><option value="brave">Brave Search</option><option value="google">Google</option><option value="bing">Bing</option></select></div>
@@ -430,7 +433,7 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
         </section>
         <section class="settings-section" data-settings-section="connection"><h3>Connection</h3><p class="section-description">Choose a supported transport and inspect the components used by this deployment.</p>
           <div class="setting-row"><div class="setting-copy"><strong>Transport mode</strong><small>Auto tries the available transport. Alternate modes are for connection compatibility, not for overriding a site's or network's access rules.</small></div><select class="setting-select setting-control" id="transport-select"><option value="auto">Automatic</option><option value="libcurl">Libcurl</option><option value="epoxy">Epoxy</option></select></div>
-          <div class="endpoint-card"><div class="endpoint-line"><span>PROXY ROUTE</span><code>/~/sj/</code></div><div class="endpoint-line"><span>WEBSOCKET ENDPOINT</span><code id="wisp-endpoint">wss://…/wisp/</code></div><div class="endpoint-line"><span>ACTIVE BUILD</span><code id="build-label">chrissysproxy-20261031-24</code></div></div>
+          <div class="endpoint-card"><div class="endpoint-line"><span>PROXY ROUTE</span><code>/~/sj/</code></div><div class="endpoint-line"><span>WEBSOCKET ENDPOINT</span><code id="wisp-endpoint">wss://…/wisp/</code></div><div class="endpoint-line"><span>ACTIVE BUILD</span><code id="build-label">chrissysproxy-20261031-25</code></div></div>
           <div class="permission-note">ChrissysProxy does not delete Scramjet databases automatically. If the browser reports a missing IndexedDB store, close every ChrissysProxy tab and clear only this site's stored data using browser site settings.</div>
         </section>
         <section class="settings-section" data-settings-section="advanced"><h3>Advanced</h3><p class="section-description">Back up your preferences or restore the defaults for this device.</p>
@@ -444,7 +447,7 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
           <div class="permission-note">A successful WebSocket handshake proves the connection opened; it does not alone prove that an external website will load. Test a permitted HTTPS page after diagnostics pass.</div>
         </section>
         <section class="settings-section" data-settings-section="about"><h3>About ChrissysProxy</h3><p class="section-description">ChrissysProxy is a private browser workspace built around a separate proxy connection.</p>
-          <div class="endpoint-card"><div class="endpoint-line"><span>APPLICATION</span><code>ChrissysProxy</code></div><div class="endpoint-line"><span>BUILD</span><code>chrissysproxy-20261031-24</code></div><div class="endpoint-line"><span>RUNTIME</span><code>Node.js 22</code></div><div class="endpoint-line"><span>BROWSER ENGINE</span><code>Scramjet 1.x</code></div><div class="endpoint-line"><span>TRANSPORT MANAGER</span><code>BareMux 2.x</code></div><div class="endpoint-line"><span>TRANSPORTS</span><code>Libcurl / Epoxy</code></div><div class="endpoint-line"><span>WEBSOCKET</span><code>Wisp JS</code></div></div>
+          <div class="endpoint-card"><div class="endpoint-line"><span>APPLICATION</span><code>ChrissysProxy</code></div><div class="endpoint-line"><span>BUILD</span><code>chrissysproxy-20261031-25</code></div><div class="endpoint-line"><span>RUNTIME</span><code>Node.js 22</code></div><div class="endpoint-line"><span>BROWSER ENGINE</span><code>Scramjet 1.x</code></div><div class="endpoint-line"><span>TRANSPORT MANAGER</span><code>BareMux 2.x</code></div><div class="endpoint-line"><span>TRANSPORTS</span><code>Libcurl / Epoxy</code></div><div class="endpoint-line"><span>WEBSOCKET</span><code>Wisp JS</code></div></div>
           <p class="section-description">ChrissysProxy cannot guarantee availability for every website. Sites may block proxy traffic or require their own authentication, permissions, or supported browser features.</p>
         </section>
       </div>
@@ -454,6 +457,6 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
   </aside>
 </div>
 
-<script type="module" src="/app.js?build=chrissysproxy-20261031-24"></script>
+<script type="module" src="/app.js?build=chrissysproxy-20261031-25"></script>
 </body>
 </html>
