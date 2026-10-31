@@ -6,6 +6,8 @@ const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf
 const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
 
 test('ChrissysProxy exposes all seven accessible workspace tabs and panels', () => {
+  assert.ok(html.includes('Your favorite sites, apps, and games, all in one place.'));
+  assert.ok(!html.includes('A purple browser workspace'));
   for (const section of ['overview', 'games', 'apps', 'library', 'notes', 'downloads', 'tools']) {
     assert.match(html, new RegExp(`data-hub-tab="${section}"`));
     assert.match(html, new RegExp(`data-hub-pane="${section}"`));

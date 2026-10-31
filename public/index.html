@@ -12,8 +12,8 @@
 <link rel="icon" href="/assets/icons/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
-<title>ChrissysProxy — Purple Browser Workspace</title>
-<meta name="description" content="ChrissysProxy is a private purple browser workspace with tabs, games, apps, notes, bookmarks, and connection diagnostics.">
+<title>ChrissysProxy</title>
+<meta name="description" content="Your favorite sites, apps, and games, with bookmarks, notes, and browsing tools in one place.">
 <style>
 :root{
   color-scheme:dark;
@@ -292,7 +292,7 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
           <div class="hero-emblem" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14.5" stroke="#ead8ff" stroke-width="1.5"/><ellipse cx="20" cy="20" rx="6.5" ry="14.5" stroke="#ead8ff" stroke-width="1.3"/><path d="M5.8 20h28.4M8.5 12.5h23M8.5 27.5h23" stroke="#ead8ff" stroke-width="1.2" stroke-linecap="round"/><path d="m28.8 7.8 2.3-2.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
           <p class="eyebrow">YOUR SPACE. YOUR NEXT DISCOVERY.</p>
           <h1>Welcome to<br><span>ChrissysProxy.</span></h1>
-          <p class="hero-copy">A purple browser workspace for the web, your favorite apps, games, and everything you want to keep close.</p>
+          <p class="hero-copy">Your favorite sites, apps, and games, all in one place.</p>
           <form class="hf" role="search"><svg class="search-glyph" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input placeholder="What are you looking for?" autocomplete="off" spellcheck="false"><button class="go" type="submit">SEARCH <span aria-hidden="true">↗</span></button></form>
           <div class="hero-note">Your local bookmarks and recent pages stay in this browser workspace unless you clear them.</div>
         </div>
@@ -432,7 +432,7 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
         </section>
         <section class="settings-section" data-settings-section="connection"><h3>Connection</h3><p class="section-description">Choose a supported transport and inspect the components used by this deployment.</p>
           <div class="setting-row"><div class="setting-copy"><strong>Transport mode</strong><small>Auto tries the available transport. Alternate modes are for connection compatibility, not for overriding a site's or network's access rules.</small></div><select class="setting-select setting-control" id="transport-select"><option value="auto">Automatic</option><option value="libcurl">Libcurl</option><option value="epoxy">Epoxy</option></select></div>
-          <div class="endpoint-card"><div class="endpoint-line"><span>PROXY ROUTE</span><code>/~/sj/</code></div><div class="endpoint-line"><span>WEBSOCKET ENDPOINT</span><code id="wisp-endpoint">wss://…/wisp/</code></div><div class="endpoint-line"><span>ACTIVE BUILD</span><code id="build-label">chrissysproxy-20261031-26</code></div></div>
+          <div class="endpoint-card"><div class="endpoint-line"><span>PROXY ROUTE</span><code>/~/sj/</code></div><div class="endpoint-line"><span>WEBSOCKET ENDPOINT</span><code id="wisp-endpoint">wss://…/wisp/</code></div><div class="endpoint-line"><span>ACTIVE BUILD</span><code id="build-label">chrissysproxy-20261031-27</code></div></div>
           <div class="permission-note">ChrissysProxy does not delete Scramjet databases automatically. If the browser reports a missing IndexedDB store, close every ChrissysProxy tab and clear only this site's stored data using browser site settings.</div>
         </section>
         <section class="settings-section" data-settings-section="advanced"><h3>Advanced</h3><p class="section-description">Back up your preferences or restore the defaults for this device.</p>
@@ -446,7 +446,7 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
           <div class="permission-note">A successful WebSocket handshake proves the connection opened; it does not alone prove that an external website will load. Test a permitted HTTPS page after diagnostics pass.</div>
         </section>
         <section class="settings-section" data-settings-section="about"><h3>About ChrissysProxy</h3><p class="section-description">ChrissysProxy is a private browser workspace built around a separate proxy connection.</p>
-          <div class="endpoint-card"><div class="endpoint-line"><span>APPLICATION</span><code>ChrissysProxy</code></div><div class="endpoint-line"><span>BUILD</span><code>chrissysproxy-20261031-26</code></div><div class="endpoint-line"><span>RUNTIME</span><code>Node.js 22</code></div><div class="endpoint-line"><span>BROWSER ENGINE</span><code>Scramjet 1.x</code></div><div class="endpoint-line"><span>TRANSPORT MANAGER</span><code>BareMux 2.x</code></div><div class="endpoint-line"><span>TRANSPORTS</span><code>Libcurl / Epoxy</code></div><div class="endpoint-line"><span>WEBSOCKET</span><code>Wisp JS</code></div></div>
+          <div class="endpoint-card"><div class="endpoint-line"><span>APPLICATION</span><code>ChrissysProxy</code></div><div class="endpoint-line"><span>BUILD</span><code>chrissysproxy-20261031-27</code></div><div class="endpoint-line"><span>RUNTIME</span><code>Node.js 22</code></div><div class="endpoint-line"><span>BROWSER ENGINE</span><code>Scramjet 1.x</code></div><div class="endpoint-line"><span>TRANSPORT MANAGER</span><code>BareMux 2.x</code></div><div class="endpoint-line"><span>TRANSPORTS</span><code>Libcurl / Epoxy</code></div><div class="endpoint-line"><span>WEBSOCKET</span><code>Wisp JS</code></div></div>
           <p class="section-description">ChrissysProxy cannot guarantee availability for every website. Sites may block proxy traffic or require their own authentication, permissions, or supported browser features.</p>
         </section>
       </div>
@@ -456,6 +456,6 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
   </aside>
 </div>
 
-<script type="module" src="/app.js?build=chrissysproxy-20261031-26"></script>
+<script type="module" src="/app.js?build=chrissysproxy-20261031-27"></script>
 </body>
 </html>
