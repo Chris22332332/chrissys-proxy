@@ -1,10 +1,10 @@
-# ChrissysProxy v27 test report
+# ChrissysProxy v28 test report
 
 ## Verified locally
 
 - `npm ci` completed on Node 24.13.0 with zero reported vulnerabilities. Node 24 emits an engine warning because the project targets Node 22.
-- `npm test`: 51 tests passed, 0 failed. The source/configuration checks also passed.
-- Low-lag mode was exercised in a browser on `http://127.0.0.1:8081/`; it removed ChrissysProxy interface blur and shadows. The theme selector was verified in the live browser and restored after testing.
+- `npm test`: 52 tests passed, 0 failed. The source/configuration checks also passed.
+- Low-lag mode was exercised in a browser on `http://127.0.0.1:8081/`; it removed ChrissysProxy interface blur and shadows. Aurora, Nebula, and Plum themes each produced distinct background gradients and accent colors in the browser.
 
 - `npm install`: completed successfully; npm reported zero vulnerabilities.
 - `npm start` with `PORT=8080`: passed startup checks and served the app.
@@ -23,7 +23,7 @@
 
 ## Current deployment
 
-Render `/healthz` returns `ok: true`, build `chrissysproxy-20261031-27`, and Node major 22. The Games section shows seven shortcuts and no CrazyGames card. The homepage tagline and document title were verified in the live browser.
+Render `/healthz` returns `ok: true`, build `chrissysproxy-20261031-28`, and Node major 22. The Games section shows seven shortcuts and no CrazyGames card. The homepage tagline and document title were verified in the live browser.
 
 ## Environment note
 

@@ -14,6 +14,12 @@ test('ChrissysProxy exposes all seven accessible workspace tabs and panels', () 
   }
 });
 
+test('appearance themes change the page background as well as the accent colors', () => {
+  assert.match(html, /html\[data-accent="nebula"\]\{[^}]*--bg:/);
+  assert.match(html, /html\[data-accent="plum"\]\{[^}]*--bg:/);
+  assert.match(html, /background:radial-gradient\(ellipse at 16% -10%,var\(--bg-glow-1\)/);
+});
+
 test('seven game cards use local original artwork and legitimate catalogue URLs', () => {
   const images = ['arcade', 'puzzle', 'adventure', 'sports', 'platformer', 'boss-battle', 'strategy'];
   for (const image of images) {

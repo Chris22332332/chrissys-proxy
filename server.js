@@ -13,7 +13,7 @@ import { createLoginLimiter, createSessionToken, isSameOriginRequest, parseCooki
 import { handleWispUpgrade } from './src/wisp-upgrade.js';
 import { resolveRuntimeConfig, formatRuntimeConfigErrors } from './src/runtime-config.js';
 
-const BUILD_ID = 'chrissysproxy-20261031-27';
+const BUILD_ID = 'chrissysproxy-20261031-28';
 dns.setDefaultResultOrder('ipv4first');
 const app = express();
 const server = createServer(app);

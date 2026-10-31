@@ -17,18 +17,18 @@
 <style>
 :root{
   color-scheme:dark;
-  --bg:#0d0919;--bg-2:#120d24;--panel:#17112b;--panel-2:#1e1738;--panel-3:#261d45;
+  --bg:#0d0919;--bg-2:#120d24;--bg-glow-1:rgba(124,92,255,.20);--bg-glow-2:rgba(215,116,255,.13);--panel:#17112b;--panel-2:#1e1738;--panel-3:#261d45;
   --line:rgba(190,164,255,.15);--line-strong:rgba(190,164,255,.27);
   --text:#f5efff;--muted:#a99cbe;--soft:#756889;
   --accent:#b68aff;--accent-2:#7c5cff;--accent-3:#e5a7ff;--good:#70e2bb;--warn:#ffd38a;--bad:#ff8caa;
   --shadow:0 24px 80px rgba(0,0,0,.38);--radius:18px;
   --font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
-html[data-accent="nebula"]{--accent:#a98cff;--accent-2:#6548df;--accent-3:#d5b6ff;--panel:#15112b;--panel-2:#1c1740}
-html[data-accent="plum"]{--accent:#d38aff;--accent-2:#984ee0;--accent-3:#f0b0e8;--panel:#211026;--panel-2:#2b1737}
+html[data-accent="nebula"]{--bg:#0a0d1d;--bg-2:#10142a;--bg-glow-1:rgba(101,72,223,.25);--bg-glow-2:rgba(103,149,255,.14);--accent:#a98cff;--accent-2:#6548df;--accent-3:#d5b6ff;--panel:#15112b;--panel-2:#1c1740}
+html[data-accent="plum"]{--bg:#170a17;--bg-2:#211026;--bg-glow-1:rgba(211,138,255,.22);--bg-glow-2:rgba(240,176,232,.15);--accent:#d38aff;--accent-2:#984ee0;--accent-3:#f0b0e8;--panel:#211026;--panel-2:#2b1737;--panel-3:#382047}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{font-family:var(--font);color:var(--text);background:radial-gradient(ellipse at 16% -10%,rgba(124,92,255,.20),transparent 36%),radial-gradient(ellipse at 92% 4%,rgba(215,116,255,.13),transparent 28%),var(--bg);display:flex;flex-direction:column;overflow:hidden;min-width:320px}
+body{font-family:var(--font);color:var(--text);background:radial-gradient(ellipse at 16% -10%,var(--bg-glow-1),transparent 36%),radial-gradient(ellipse at 92% 4%,var(--bg-glow-2),transparent 28%),var(--bg);display:flex;flex-direction:column;overflow:hidden;min-width:320px}
 button,input,select{font:inherit}button{color:inherit}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 button{border:0;cursor:pointer}
@@ -432,7 +432,7 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
         </section>
         <section class="settings-section" data-settings-section="connection"><h3>Connection</h3><p class="section-description">Choose a supported transport and inspect the components used by this deployment.</p>
           <div class="setting-row"><div class="setting-copy"><strong>Transport mode</strong><small>Auto tries the available transport. Alternate modes are for connection compatibility, not for overriding a site's or network's access rules.</small></div><select class="setting-select setting-control" id="transport-select"><option value="auto">Automatic</option><option value="libcurl">Libcurl</option><option value="epoxy">Epoxy</option></select></div>
-          <div class="endpoint-card"><div class="endpoint-line"><span>PROXY ROUTE</span><code>/~/sj/</code></div><div class="endpoint-line"><span>WEBSOCKET ENDPOINT</span><code id="wisp-endpoint">wss://…/wisp/</code></div><div class="endpoint-line"><span>ACTIVE BUILD</span><code id="build-label">chrissysproxy-20261031-27</code></div></div>
+          <div class="endpoint-card"><div class="endpoint-line"><span>PROXY ROUTE</span><code>/~/sj/</code></div><div class="endpoint-line"><span>WEBSOCKET ENDPOINT</span><code id="wisp-endpoint">wss://…/wisp/</code></div><div class="endpoint-line"><span>ACTIVE BUILD</span><code id="build-label">chrissysproxy-20261031-28</code></div></div>
           <div class="permission-note">ChrissysProxy does not delete Scramjet databases automatically. If the browser reports a missing IndexedDB store, close every ChrissysProxy tab and clear only this site's stored data using browser site settings.</div>
         </section>
         <section class="settings-section" data-settings-section="advanced"><h3>Advanced</h3><p class="section-description">Back up your preferences or restore the defaults for this device.</p>
@@ -446,7 +446,7 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
           <div class="permission-note">A successful WebSocket handshake proves the connection opened; it does not alone prove that an external website will load. Test a permitted HTTPS page after diagnostics pass.</div>
         </section>
         <section class="settings-section" data-settings-section="about"><h3>About ChrissysProxy</h3><p class="section-description">ChrissysProxy is a private browser workspace built around a separate proxy connection.</p>
-          <div class="endpoint-card"><div class="endpoint-line"><span>APPLICATION</span><code>ChrissysProxy</code></div><div class="endpoint-line"><span>BUILD</span><code>chrissysproxy-20261031-27</code></div><div class="endpoint-line"><span>RUNTIME</span><code>Node.js 22</code></div><div class="endpoint-line"><span>BROWSER ENGINE</span><code>Scramjet 1.x</code></div><div class="endpoint-line"><span>TRANSPORT MANAGER</span><code>BareMux 2.x</code></div><div class="endpoint-line"><span>TRANSPORTS</span><code>Libcurl / Epoxy</code></div><div class="endpoint-line"><span>WEBSOCKET</span><code>Wisp JS</code></div></div>
+          <div class="endpoint-card"><div class="endpoint-line"><span>APPLICATION</span><code>ChrissysProxy</code></div><div class="endpoint-line"><span>BUILD</span><code>chrissysproxy-20261031-28</code></div><div class="endpoint-line"><span>RUNTIME</span><code>Node.js 22</code></div><div class="endpoint-line"><span>BROWSER ENGINE</span><code>Scramjet 1.x</code></div><div class="endpoint-line"><span>TRANSPORT MANAGER</span><code>BareMux 2.x</code></div><div class="endpoint-line"><span>TRANSPORTS</span><code>Libcurl / Epoxy</code></div><div class="endpoint-line"><span>WEBSOCKET</span><code>Wisp JS</code></div></div>
           <p class="section-description">ChrissysProxy cannot guarantee availability for every website. Sites may block proxy traffic or require their own authentication, permissions, or supported browser features.</p>
         </section>
       </div>
@@ -456,6 +456,6 @@ body.reduced-motion .command-backdrop,body.reduced-motion .command-item,body.red
   </aside>
 </div>
 
-<script type="module" src="/app.js?build=chrissysproxy-20261031-27"></script>
+<script type="module" src="/app.js?build=chrissysproxy-20261031-28"></script>
 </body>
 </html>
