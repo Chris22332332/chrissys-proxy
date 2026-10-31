@@ -13,7 +13,7 @@
 - Example Domain and Google homepage rendered over Libcurl; Example Domain rendered over Epoxy.
 - Brave Search returned results over Epoxy.
 - DuckDuckGo timed out from Render (`ETIMEDOUT` to `52.250.42.157:443`) with both transports. Google search triggered Google's unusual-traffic CAPTCHA. This points to destination/network restrictions on Render's outbound path, not a local TLS certificate error.
-- v24 changes the default search engine to Brave based on that live test; an updated Render deploy is required before the new default is live.
+- v24 defaults searches to Brave based on the live test. Commit `17bd046` is deployed, and `/healthz` returns `ok: true`, the v24 build ID, and Node major 22.
 
 ## Environment note
 
