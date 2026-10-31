@@ -4,7 +4,7 @@ import { normalizePortalSettings, validateSettingsBackup } from '../public/setti
 
 const defaults = {
   theme: 'aurora', animations: true, saveHistory: true, restoreSession: true,
-  searchEngine: 'duckduckgo', transport: 'auto', allowAutoplay: false,
+  searchEngine: 'brave', transport: 'auto', allowAutoplay: false,
   allowClipboard: false, allowFullscreen: true, maxTabs: 16, compactTabs: false
 };
 const engines = ['duckduckgo', 'brave', 'google', 'bing'];

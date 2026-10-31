@@ -6,7 +6,7 @@ import { filterCommands } from './command-core.js';
 'use strict';
 
 const $ = (id) => document.getElementById(id);
-const BUILD_ID = 'chrissysproxy-20261031-23';
+const BUILD_ID = 'chrissysproxy-20261031-24';
 const DEFAULT_MAX_TABS = 16;
 const ALLOWED_MAX_TABS = [8, 12, 16, 24];
 const SCRIPT_TIMEOUT_MS = 20000;
@@ -21,7 +21,7 @@ const KEYS = {
 };
 const defaults = {
   theme: 'aurora', animations: true, saveHistory: true, restoreSession: true,
-  searchEngine: 'duckduckgo', transport: 'auto', allowAutoplay: false,
+  searchEngine: 'brave', transport: 'auto', allowAutoplay: false,
   allowClipboard: false, allowFullscreen: true, maxTabs: DEFAULT_MAX_TABS, compactTabs: false
 };
 const engines = {
