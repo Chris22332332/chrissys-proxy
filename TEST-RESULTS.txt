@@ -1,11 +1,8 @@
-CHRISSYSPROXY v24 TEST SUMMARY
+CHRISSYSPROXY v25 TEST SUMMARY
 
-npm install completed; zero npm audit vulnerabilities reported.
-npm start with PORT=8080 passed startup checks.
-Real browser with Libcurl: Example Domain, Google, DuckDuckGo search results, YouTube, and CrazyGames rendered. A CrazyGames game route loaded, and Back/Forward worked between the catalogue and game route.
-TikTok rendered its page with Libcurl, though some site API requests returned 403. Auto selected Libcurl successfully. Explicit Epoxy reproduced the YouTube Scramjet error screen.
-Settings switched transports; the app now waits for the current worker build during reload. The redundant service-worker route check was removed to prevent a Scramjet config race.
-npm test: 50 tests passed, 0 failed; source/configuration checks passed. npm run preflight passed.
+npm ci completed on Node 24.13.0; zero npm audit vulnerabilities reported. Node 24 warns because the project targets Node 22.
+Low-lag mode was tested in a browser on PORT=8081; it removed interface blur and shadows. Theme selection was verified and restored.
+npm test: 51 tests passed, 0 failed; source/configuration checks passed. git diff --check passed.
 
-Node 24.13.0 was available locally while the project specifies Node 22 (>=22.9 <23); local install/start/test succeeded on Node 24.
-Render v23: health check passed on Node 22.23.4. Example Domain and Google homepage rendered over Libcurl; Example Domain rendered over Epoxy; Brave Search returned results over Epoxy. DuckDuckGo timed out from Render (ETIMEDOUT to 52.250.42.157:443) with both transports. Google search triggered an unusual-traffic CAPTCHA. v24 defaults search to Brave; commit 17bd046 is live, and /healthz returns the v24 build ID on Node 22.
+Render v24 checks: Example Domain and Google homepage rendered over Libcurl; Example Domain rendered over Epoxy; Brave Search returned results over Epoxy. DuckDuckGo timed out from Render (ETIMEDOUT to 52.250.42.157:443) with both transports. Google search triggered an unusual-traffic CAPTCHA. CrazyGames Space Waves details loaded, but its game area stayed blank under Libcurl. Bloxd.io stayed on its game-loading spinner for about one minute under Epoxy. Switching transports did not resolve game startup.
+Render v25 is live at commit 7322ecb. /healthz reports build chrissysproxy-20261031-25 on Node 22; low-lag mode is present in Appearance settings.
