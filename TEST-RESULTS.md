@@ -1,4 +1,4 @@
-# ChrissysProxy v26 test report
+# ChrissysProxy v27 test report
 
 ## Verified locally
 
@@ -23,7 +23,7 @@
 
 ## Current deployment
 
-Render `/healthz` returns `ok: true`, build `chrissysproxy-20261031-26`, and Node major 22. The Games section shows seven shortcuts and no CrazyGames card.
+Render `/healthz` returns `ok: true`, build `chrissysproxy-20261031-27`, and Node major 22. The Games section shows seven shortcuts and no CrazyGames card. The homepage tagline and document title were verified in the live browser.
 
 ## Environment note
 
